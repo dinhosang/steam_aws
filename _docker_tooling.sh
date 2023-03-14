@@ -28,11 +28,11 @@ source ./tools/docker_tooling/index.sh
 #
 #       -   will run the shellcheck linter to report on possible syntax errors / dangerous code
 #
-#   ./docker_tooling.sh run lint
+#   ./docker_tooling.sh run fmt
 #
 #       -   will run the shfmt tool to report on style mistakes
 #
-#   ./docker_tooling.sh run lint:fix
+#   ./docker_tooling.sh run fmt:fix
 #
 #       -   will run the shfmt tool and auto update files with the recommended changes
 #

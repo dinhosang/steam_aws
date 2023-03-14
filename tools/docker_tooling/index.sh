@@ -25,7 +25,7 @@ _tools_docker_tooling_module() {
 
     ###
 
-    run_shellcheck_tooling() {
+    run_lint_shellcheck_tooling() {
 
         local -r cli_dir=$(pwd)
 
@@ -84,7 +84,7 @@ _tools_docker_tooling_module() {
 
         if [ $LINT == "$SUB_COMMAND" ]; then
 
-            run_shellcheck_tooling
+            run_lint_shellcheck_tooling
 
         elif [ $FORMAT == "$SUB_COMMAND" ]; then
 
