@@ -17,6 +17,7 @@ _tools_docker_tooling_module() {
 
 
     source ./tools/common/_config.sh
+
     source ./tools/common/_helpers.sh
 
 
@@ -36,7 +37,7 @@ _tools_docker_tooling_module() {
             --rm \
             -v "$cli_dir":/src \
             -t \
-            $STEAM_AWS_TOOLING_IMAGE "shellcheck -a -x -f tty --norc -s bash -S style *.sh"
+            $STEAM_AWS_TOOLING_IMAGE "find /src -type f \( -name '*.sh' -o -path '/src/packer/scripts/startup/*' -name '*.txt' \) | xargs shellcheck -a -x -f tty --norc -s bash -S style"
     }
 
 

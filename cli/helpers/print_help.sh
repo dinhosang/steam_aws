@@ -227,15 +227,15 @@ _helpers_print_help_module() {
 
     print_help_and_quit() {
 
-        if [ "$1" == $INSTANCE ]; then
+        if [ "$1" == "$INSTANCE" ]; then
             
             _print_help_instance
 
-        elif [ "$1" == $AMI ]; then
+        elif [ "$1" == "$AMI" ]; then
 
             _print_help_ami
 
-        elif [ "$1" == $SNAPSHOT ]; then
+        elif [ "$1" == "$SNAPSHOT" ]; then
 
             _print_help_volume_snapshot
 

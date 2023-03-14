@@ -1,0 +1,16 @@
+
+# shellcheck disable=SC2016,SC2086
+if ! (grep -Fxq 'START: ${FILE_NAME}' ${STARTUP_COMPLETED_SCRIPT_PATH}); then
+
+    # shellcheck disable=SC2129
+    echo -e 'START: ${FILE_NAME}\n' >> ${STARTUP_COMPLETED_SCRIPT_PATH}
+
+
+    # shellcheck disable=SC2086
+    ${SCRIPT_FILE_PATH} >> ${STARTUP_COMPLETED_SCRIPT_PATH} 2>&1
+
+
+    # shellcheck disable=SC2129
+    echo -e '\nFINISH: ${FILE_NAME}\n\n' >> ${STARTUP_COMPLETED_SCRIPT_PATH}
+
+fi

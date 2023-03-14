@@ -1,0 +1,5 @@
+#!/bin/bash
+
+
+# shellcheck disable=SC2086
+echo -en "${INSTANCE_LOGIN_USER_PASSWORD}\n${INSTANCE_LOGIN_USER_PASSWORD}\n" | sudo passwd ${INSTANCE_LOGIN_USER_NAME}

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+# shellcheck disable=SC2086
+echo -e 'START: running startup scripts\n\n' >> ${STARTUP_COMPLETED_SCRIPT_PATH}
+
