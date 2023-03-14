@@ -105,7 +105,7 @@ _helpers_flags_module() {
 
 ###
 
-if [ -z $HELPERS_FLAGS_MODULE_IMPORTED ]; then
+if [[ ${HELPERS_FLAGS_MODULE_IMPORTED:=false} == false ]]; then
 
     _helpers_flags_module
 

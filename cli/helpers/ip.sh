@@ -64,7 +64,7 @@ _helpers_ip_module() {
 
 ###
 
-if [ -z $HELPERS_IP_MODULE_IMPORTED ]; then
+if [[ ${HELPERS_IP_MODULE_IMPORTED:=false} == false ]]; then
 
     _helpers_ip_module
 

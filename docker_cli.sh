@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 ##
 #   NOTE:
 #       -   all commands must be run at the root of steam_aws directory
@@ -7,8 +9,6 @@
 ##
 
 source ./tools/docker_cli/index.sh
-
-###
 
 ##
 #   USAGE GUIDE:

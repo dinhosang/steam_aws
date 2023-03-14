@@ -41,7 +41,7 @@ _subcommands_ami_module() {
 
         ###
 
-        if [ -z "${ami_ids[0]}" ]; then
+        if [ -z "${ami_ids[0]:-}" ]; then
 
             log_info "no additional AMIs found - skipping deletion"
 
@@ -68,7 +68,7 @@ _subcommands_ami_module() {
 
         ###
 
-        if [ -z "${ami_ids[0]}" ]; then
+        if [ -z "${ami_ids[0]:-}" ]; then
 
             log_info "no ami found - skipping deletion"
 
@@ -113,7 +113,7 @@ _subcommands_ami_module() {
 
 ###
 
-if [ -z $SUBCOMMANDS_AMI_MODULE_IMPORTED ]; then
+if [[ ${SUBCOMMANDS_AMI_MODULE_IMPORTED:=false} == false ]]; then
 
     _subcommands_ami_module
 

@@ -66,7 +66,7 @@ _helpers_log_module() {
 
 ###
 
-if [ -z $HELPERS_LOG_MODULE_IMPORTED ]; then
+if [[ ${HELPERS_LOG_MODULE_IMPORTED:=false} == false ]]; then
 
     _helpers_log_module
 

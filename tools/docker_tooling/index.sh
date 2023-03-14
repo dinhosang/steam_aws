@@ -20,7 +20,11 @@ _tools_docker_tooling_module() {
 
     build_tooling_image() {
 
-        docker build -t $STEAM_AWS_TOOLING_IMAGE -f ./tools/docker_tooling/Dockerfile .
+        docker build \
+            -t ${STEAM_AWS_TOOLING_IMAGE}:latest \
+            -f ./tools/docker_tooling/Dockerfile \
+            --rm \
+            .
     }
 
     ###
@@ -101,7 +105,7 @@ _tools_docker_tooling_module() {
 
     steam_aws_docker_tooling_main() {
 
-        local -r COMMAND=$1
+        local -r COMMAND="${1:-}"
 
         if [ -z "$COMMAND" ]; then
 
@@ -129,7 +133,7 @@ _tools_docker_tooling_module() {
 
         else
 
-            local -r SUB_COMMAND=$2
+            local -r SUB_COMMAND="${2:-}"
 
             run_controller "$SUB_COMMAND"
 
@@ -139,7 +143,7 @@ _tools_docker_tooling_module() {
 
 ###
 
-if [ -z $TOOLS_DOCKER_TOOLING_EXPORTED ]; then
+if [[ ${TOOLS_DOCKER_TOOLING_EXPORTED:=false} == false ]]; then
 
     _tools_docker_tooling_module
 

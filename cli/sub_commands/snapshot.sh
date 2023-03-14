@@ -27,7 +27,7 @@ _subcommands_snapshot_module() {
 
         ###
 
-        if [ -z "${snapshot_ids[0]}" ]; then
+        if [ -z "${snapshot_ids[0]:-}" ]; then
 
             log_info "no additional snapshots found - skipping deletion"
 
@@ -54,7 +54,7 @@ _subcommands_snapshot_module() {
 
         ###
 
-        if [ -z "${snapshot_ids[0]}" ]; then
+        if [ -z "${snapshot_ids[0]:-}" ]; then
 
             log_info "no snapshot found - skipping deletion"
 
@@ -72,7 +72,7 @@ _subcommands_snapshot_module() {
 
 ###
 
-if [ -z $SUBCOMMANDS_SNAPSHOT_MODULE_IMPORTED ]; then
+if [[ ${SUBCOMMANDS_SNAPSHOT_MODULE_IMPORTED:=false} == false ]]; then
 
     _subcommands_snapshot_module
 

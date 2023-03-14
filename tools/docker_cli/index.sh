@@ -21,8 +21,9 @@ _tools_docker_cli_module() {
     build_steam_aws_runner_image() {
 
         docker build \
-            -t $STEAM_AWS_RUNNER_IMAGE \
+            -t ${STEAM_AWS_RUNNER_IMAGE}:latest \
             -f ./tools/docker_cli/Dockerfile \
+            --rm \
             --build-arg USER_NAME_PROVIDED=$STEAM_AWS_RUNNER_CONTAINER_USER \
             .
     }
@@ -97,7 +98,7 @@ _tools_docker_cli_module() {
 
             read -r -a RUNNER_CMDS <<<"${@:2}"
 
-            run_steam_aws_runner "${RUNNER_CMDS[@]}"
+            run_steam_aws_runner "${RUNNER_CMDS[@]:-}"
 
         fi
     }
@@ -105,7 +106,7 @@ _tools_docker_cli_module() {
 
 ###
 
-if [ -z $TOOLS_DOCKER_CLI_EXPORTED ]; then
+if [[ ${TOOLS_DOCKER_CLI_EXPORTED:=false} == false ]]; then
 
     _tools_docker_cli_module
 

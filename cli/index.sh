@@ -152,7 +152,7 @@ _cli_index_module() {
 
 ###
 
-if [ -z $CLI_INDEX_MODULE_IMPORTED ]; then
+if [[ ${CLI_INDEX_MODULE_IMPORTED:=false} == false ]]; then
 
     _cli_index_module
 
