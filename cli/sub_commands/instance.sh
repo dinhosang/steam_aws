@@ -1,121 +1,137 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_subcommands_instance_module() {
+
+    export SUBCOMMANDS_INSTANCE_MODULE_IMPORTED=true
 
 
-source ./cli/aws_resources/ami/index.sh
-source ./cli/aws_resources/ec2/index.sh
-source ./cli/aws_resources/instance_profile/index.sh
-source ./cli/aws_resources/sg/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
+    source ./cli/aws_resources/ec2/helpers.sh
+
+    source ./cli/aws_resources/ami/index.sh
+    source ./cli/aws_resources/ec2/index.sh
+    source ./cli/aws_resources/instance_profile/index.sh
+    source ./cli/aws_resources/sg/index.sh
 
 
-_create_instance_and_related_resources(){
-
-    echo "START: Create Instance and Related Resources"
-
-    ##
-    #   CREATE INSTANCE PROFILE
-    ##
+    ###
 
 
-    _create_instance_profile
+    create_profile_sgs_instance(){
+
+        log_start "creating profile, sgs, and instance"
+
+        
+        ###
 
 
-    ##
-    #   CREATE SGs
-    ##
+        create_instance_profile
 
 
-    _create_aws_connect_sg
-    _create_rdp_sg
+        ###
 
 
-    ##
-    #   CREATE EC2
-    ##
+        create_aws_connect_sg
+        create_rdp_sg
 
 
-    _create_ec2
+        ###
 
-    echo "FINISH: Create Instance and Related Resources"
+
+        create_ec2
+
+
+        ###
+
+
+        log_finish "creating profile, sgs, and instance"
+    }
+
+    delete_all_but_most_recent_instance() {
+
+        log_start "prune instances"
+
+        
+        ###
+
+
+        local instance_ids=($(get_running_instance_ids false))
+
+
+        ###
+
+
+        if [ -z "$instance_ids" ]; then
+
+            log_info "no additional instances found running - skipping deletion"
+
+        else
+
+            delete_ec2 ${instance_ids[*]}
+
+        fi
+
+
+        ###
+
+
+        log_finish "prune instances"
+    }
+
+    delete_profile_sgs_instance(){
+
+        log_start "deleting profile, sgs, and most recent instance"
+
+
+        ###
+
+
+        local instance_id=($(get_running_instance_ids true))
+
+
+        ###
+
+
+        if [ -z "$instance_id" ]; then
+
+            log_info "no instances found running - skipping deletion"
+
+        else
+
+            delete_ec2 ${instance_id[*]}
+
+        fi
+
+
+       ###
+
+
+        delete_aws_connect_sg
+        delete_rdp_sg
+
+
+        ###
+
+
+        delete_instance_profile
+
+
+        ###
+
+
+        log_finish "deleting profile, sgs, and most recent instance"
+    }
 }
 
-_delete_all_but_most_recent_instance() {
 
-    echo "START: prune instances"
-
-    
-    ##
-    #   INSTANCES - RETRIEVE IDs
-    ##
+###
 
 
-    local ec2_instance_ids=($(_get_running_instance_ids false))
+if [ -z $SUBCOMMANDS_INSTANCE_MODULE_IMPORTED ]; then 
 
+    _subcommands_instance_module
 
-    if [ -z "$ec2_instance_ids" ]; then
-
-        echo "INFO: No additional instances found running"
-
-    else
-
-        ##
-        #   INSTANCES - DELETE
-        ##
-
-
-       _delete_ec2 ${ec2_instance_ids[*]}
-
-    fi
-
-    echo "FINISH: prune instances"
-}
-
-_delete_instance_and_related_resources(){
-
-    echo "START: Delete Instance and Related Resources"
-
-    ##
-    #   DELETE EC2 INSTANCE
-    ##
-
-
-    local instance_id=($(_get_running_instance_ids true))
-
-    if [ -z "$instance_id" ]; then
-
-        echo "INFO: No instances found running"
-
-    else
-
-       _delete_ec2 ${instance_id[*]}
-
-    fi
-
-
-    # #
-    #   DELETE SGs
-    # #
-
-
-    _delete_aws_connect_sg
-    _delete_rdp_sg
-
-
-    ##
-    #   DELETE INSTANCE PROFILE
-    ##
-
-
-    _delete_instance_profile
-
-    echo "FINISH: Delete Instance and Related Resources"
-}
+fi

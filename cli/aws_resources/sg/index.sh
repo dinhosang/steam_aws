@@ -1,11 +1,5 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
-
-
-source ./cli/aws_resources/sg/_create_sgs.sh
-
-source ./cli/aws_resources/sg/_delete_sgs.sh
+source ./cli/aws_resources/sg/create_sgs.sh
+source ./cli/aws_resources/sg/delete_sgs.sh

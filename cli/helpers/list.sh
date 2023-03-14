@@ -1,23 +1,52 @@
 #!/bin/bash
 
 
-is_in_list() {
-    local value=$1
-    local array="${@:2}"
+_helpers_list_module() {
 
-    if [[ ${array[*]} =~ (' '|^)$value(' '|$) ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
+    export HELPERS_LIST_MODULE_IMPORTED=true
 
-get_flag_value_from_flags_list() {
-    local flag_sought=$1
 
-    for flag in "${USER_FLAGS[@]}"; do
-        if [[ $flag =~ (^$flag_sought=.*$) ]]; then
-            echo $flag | awk -F '=' '{print $NF}'
+    ###
+
+
+    is_in_list() {
+
+        local VALUE=$1
+        local LIST="${@:2}"
+
+        if [[ ${LIST[*]} =~ (' '|^)$VALUE(' '|$) ]]; then
+
+            return 0
+
+        else
+
+            return 1
+
         fi
-    done
+    }
+
+    get_flag_value_from_flags_list() {
+
+        local FLAG_SOUGHT=$1
+
+        for flag in "${USER_FLAGS[@]}"; do
+
+            if [[ $flag =~ (^$FLAG_SOUGHT=.*$) ]]; then
+
+                echo $flag | awk -F '=' '{print $NF}'
+
+            fi
+
+        done
+    }
 }
+
+
+###
+
+
+if [ -z $HELPERS_LIST_MODULE_IMPORTED ]; then 
+
+    _helpers_list_module
+
+fi

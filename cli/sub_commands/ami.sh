@@ -1,123 +1,145 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_subcommands_ami_module() {
+
+    export SUBCOMMANDS_AMI_MODULE_IMPORTED=true
 
 
-source ./cli/config/index.sh
-
-source ./cli/helpers/index.sh
-
-source ./cli/aws_resources/ami/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
+    source ./cli/config/index.sh
+
+    source ./cli/helpers/index.sh
+    source ./cli/aws_resources/ami/helpers.sh
+    source ./cli/aws_resources/ec2/helpers.sh
+
+    source ./cli/aws_resources/ami/index.sh
 
 
-_create_ami() {
+    ###
 
-    echo "START: create AMI"
+    
+    create_ami() {
 
-    _create_ami_via_packer
+        log_start "create AMI"
 
-    echo "FINISH: create AMI"
+        
+        ###
+
+
+        create_ami_via_packer
+
+
+        ###
+
+
+        log_finish "create AMI"
+    }
+
+    delete_all_but_most_recent_ami() {
+        
+        log_start "prune AMIs"
+        
+        
+        ###
+
+
+        local ami_ids=($(get_active_ami_ids false))
+
+
+        ###
+
+
+        if [ -z "$ami_ids" ]; then
+
+            log_info "no additional AMIs found - skipping deletion"
+
+        else
+
+            delete_ami ${ami_ids[*]}
+
+        fi
+
+
+        ###
+
+
+        log_finish "prune AMIs"
+    }
+
+    delete_most_recent_ami() {
+        
+        log_start "delete most recent AMI"
+        
+
+        ###
+
+
+        local ami_ids=($(get_active_ami_ids true))
+
+
+        ###
+
+
+        if [ -z "$ami_ids" ]; then
+
+            log_info "no ami found - skipping deletion"
+
+        else
+
+            delete_ami ${ami_ids[*]}
+
+        fi
+
+
+        ###
+
+
+        log_finish "delete most recent AMI"
+    }
+
+    create_ami_from_latest_instance() {
+        
+        log_start "create AMI from latest instance"
+        
+
+        ###
+
+
+        local latest_instance_id=$(get_running_instance_ids true)
+
+
+        ###
+
+
+        if [ -z "$latest_instance_id" ]; then
+
+            log_info "no running instance found - skipping ami creation"
+
+        else
+
+            log_step "instance id - '$latest_instance_id'"
+
+            create_ami_via_aws_cli_and_instance_id $latest_instance_id
+
+        fi
+
+
+        ###
+
+
+        log_finish "create AMI from latest instance"
+    }
 }
 
-_delete_all_but_most_recent_ami() {
-    
-    echo "START: prune AMIs"
-    
 
-    ##
-    #   AMIs - RETRIEVE IDs
-    ##
+###
 
 
-    local ami_ids=($(_get_active_ami_ids false))
+if [ -z $SUBCOMMANDS_AMI_MODULE_IMPORTED ]; then 
 
+    _subcommands_ami_module
 
-    if [ -z "$ami_ids" ]; then
-
-        echo "INFO: No additional amis found"
-
-    else
-
-        ##
-        #   AMIs - DELETE
-        ##
-
-
-       _delete_ami ${ami_ids[*]}
-
-    fi
-
-    echo "FINISH: prune AMIs"
-}
-
-_delete_most_recent_ami() {
-    
-    echo "START: delete most recent AMI"
-    
-
-    ##
-    #   AMIs - RETRIEVE IDs
-    ##
-
-
-    local ami_ids=($(_get_active_ami_ids true))
-
-
-    if [ -z "$ami_ids" ]; then
-
-        echo "INFO: No ami found"
-
-    else
-
-        ##
-        #   AMIs - DELETE
-        ##
-
-
-       _delete_ami ${ami_ids[*]}
-
-    fi
-
-    echo "FINISH: delete most recent AMI"
-}
-
-_create_ami_from_latest_instance() {
-    
-    echo "START: create AMI from latest instance"
-    
-
-    ##
-    #   LATEST INSTANCE - GRAB ID
-    ##
-
-
-    local latest_instance_id=$(_get_running_instance_ids true)
-
-
-    ##
-    #   LATEST INSTANCE - CHECK ID WAS RETURNED
-    ##
-
-
-    if [ -z "$latest_instance_id" ]; then
-
-        echo "STEP: no running instance found to create new AMI from"
-
-    else
-
-        echo "STEP: latest running instance found - '$latest_instance_id'"
-
-        _create_ami_via_aws_cli_and_instance_id $latest_instance_id
-
-    fi
-
-    echo "FINISH: create AMI from latest instance"
-}
+fi

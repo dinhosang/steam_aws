@@ -1,111 +1,86 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_helpers_ip_module() {
+    
+    export HELPERS_IP_MODULE_IMPORTED=true
 
 
-source ./cli/config/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
+    source ./cli/config/index.sh
+
+    source ./cli/helpers/index.sh
 
 
-_get_ip(){
-
-    ##
-    #   REQUIRED INPUT
-    ##
+    ###
 
 
-    if [ -z ${1+x} ]; then 
+    _get_ip(){
+
+        if [ -z ${1+x} ]; then 
+            
+            log_error 'IP_URL not found - Must be passed in as first argument to function.'
+
+            exit 1
+
+        fi
         
-        printf 'IP_URL not found - Must be passed in as first argument to function.\n\n'
-
-        exit 1
-
-    fi
+        local IP_URL=$1
 
 
-    ##
-    #   CONFIG
-    ##
-
-    
-    local IP_URL=$1
+        ###
 
 
-    ##
-    #   IP - GET
-    ##
+        local ip_raw="$(curl $IP_URL)"
+
+        local ip=$(echo $ip_raw | awk -F ',' '{print $2}')
 
 
-    local ip_raw="$(curl $IP_URL)"
+        ###
 
 
-    ##
-    #   IP - CLEANUP
-    ##
+        if [ -z "$ip" ]; then
+
+            log_error "could not retrieve ip address from '$IP_URL', please use secrets config"
+
+            exit 1
+
+        fi
+        
+
+        ###
 
 
-    local ip=$(echo $ip_raw | awk -F ',' '{print $2}')
+        echo $ip
+    }
 
 
-    ##
-    #   IP - CONFIRM
-    ##
+    ###
 
 
-    if [ -z "$ip" ]; then
+    get_ip_4() {
 
-        echo "ERROR: could not retrieve ip address from '$IP_URL', please use secrets config"
+        local ip=$(_get_ip $IP_4_QUERY_URL)
 
-        exit 1
+        echo $ip
+    }
 
-    fi
-    
+    get_ip_6() {
 
-    ##
-    #   RETURN
-    ##
+        local ip=$(_get_ip $IP_6_QUERY_URL)
 
-
-    echo $ip
+        echo $ip
+    }
 }
 
-_get_ip_4() {
 
-    ##
-    #   GET IP
-    ##
+###
 
 
-    local ip=$(_get_ip $IP_4_QUERY_URL)
+if [ -z $HELPERS_IP_MODULE_IMPORTED ]; then 
 
+    _helpers_ip_module
 
-    ##
-    #   RETURN
-    ##
-
-    echo $ip
-}
-
-_get_ip_6() {
-
-    ##
-    #   GET IP
-    ##
-
-
-    local ip=$(_get_ip $IP_6_QUERY_URL)
-
-
-    ##
-    #   RETURN
-    ##
-
-    echo $ip
-}
+fi

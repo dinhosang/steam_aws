@@ -1,166 +1,184 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_cli_index_module() {
+
+    export CLI_INDEX_MODULE_IMPORTED=true
 
 
-source ./cli/config/index.sh
-
-source ./cli/helpers/index.sh
-
-source ./cli/sub_commands/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
+    source ./cli/config/index.sh
+
+    source ./cli/helpers/index.sh
+
+    source ./cli/sub_commands/index.sh
 
 
-handle_ami() {
-    
-    ##
-    #   HANDLE INPUT - technically not required due to local variables in main() as this shares same context
-    ##
+    ###
 
 
-    local USER_SUB_COMMAND=$1
-    
-    local USER_FLAGS=(${@:2})
+    handle_ami() {
+
+        local USER_SUB_COMMAND=$1
+        
+        local USER_FLAGS=(${@:2})
 
 
-    ##
-    #   RUN
-    ##
+        ###
 
 
-    if ! (is_in_list $USER_SUB_COMMAND "${AMI_SUB_COMMANDS[@]}"); then
+        if ! (is_in_list $USER_SUB_COMMAND "${AMI_SUB_COMMANDS[@]}"); then
 
-        print_help_and_quit $AMI 1
+            print_help_and_quit $AMI 1
 
-    fi
+        fi
 
 
-    if [ $CREATE == $USER_SUB_COMMAND ]; then
+        ###
 
-        _handle_flags
 
-        _create_ami
+        if [ $HELP == $USER_SUB_COMMAND ]; then
 
-    elif [ $DELETE == $USER_SUB_COMMAND ]; then
+            print_help_and_quit $AMI 0
 
-        _handle_flags
+        fi
 
-        _delete_most_recent_ami
 
-    elif [ $UPDATE == $USER_SUB_COMMAND ]; then
+        ###
 
-        _handle_flags
 
-        _create_ami_from_latest_instance
+        handle_flags
 
-    elif [ $PRUNE == $USER_SUB_COMMAND ]; then
 
-        _handle_flags
+        ###
 
-        _delete_all_but_most_recent_ami
 
-    else
+        if [ $CREATE == $USER_SUB_COMMAND ]; then
 
-        print_help_and_quit $AMI 0
+            create_ami
 
-    fi
+        elif [ $DELETE == $USER_SUB_COMMAND ]; then
+
+            delete_most_recent_ami
+
+        elif [ $UPDATE == $USER_SUB_COMMAND ]; then
+
+            create_ami_from_latest_instance
+
+        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+
+            delete_all_but_most_recent_ami
+
+        fi
+    }
+
+    handle_instance() {
+
+        local USER_SUB_COMMAND=$1
+        
+        local USER_FLAGS=(${@:2})
+
+
+        ###
+
+
+        if ! (is_in_list $USER_SUB_COMMAND "${INSTANCE_SUB_COMMANDS[@]}"); then
+
+            print_help_and_quit $INSTANCE 1
+
+        fi
+        
+
+        ###
+
+
+        if [ $HELP == $USER_SUB_COMMAND ]; then
+
+            print_help_and_quit $INSTANCE 0
+
+        fi
+
+
+        ###
+
+
+        handle_flags
+
+
+        ###
+
+
+        if [ $CREATE == $USER_SUB_COMMAND ]; then
+
+            create_profile_sgs_instance
+
+        elif [ $DELETE == $USER_SUB_COMMAND ]; then
+
+            delete_profile_sgs_instance
+
+        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+
+            delete_all_but_most_recent_instance
+
+        fi
+    }
+
+    handle_snapshot() {
+
+        local USER_SUB_COMMAND=$1
+        
+        local USER_FLAGS=(${@:2})
+
+
+        ###
+
+
+        if ! (is_in_list $USER_SUB_COMMAND "${SNAPSHOT_SUB_COMMANDS[@]}"); then
+
+            print_help_and_quit $SNAPSHOT 1
+
+        fi
+
+
+        ###
+
+
+        if [ $HELP == $USER_SUB_COMMAND ]; then
+
+            print_help_and_quit $SNAPSHOT 0
+
+        fi
+
+
+        ###
+
+
+        handle_flags
+
+
+        ###
+
+
+        if [ $DELETE == $USER_SUB_COMMAND ]; then
+
+            delete_most_recent_snapshot
+
+        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+
+            delete_all_but_most_recent_snapshot
+
+        fi
+    }
 }
 
-handle_instance() {
 
-    ##
-    #   HANDLE INPUT - technically not required due to local variables in main() as this shares same context
-    ##
+###
 
 
-    local USER_SUB_COMMAND=$1
-    
-    local USER_FLAGS=(${@:2})
+if [ -z $CLI_INDEX_MODULE_IMPORTED ]; then 
 
+    _cli_index_module
 
-    ##
-    #   RUN
-    ##
-
-
-    if ! (is_in_list $USER_SUB_COMMAND "${INSTANCE_SUB_COMMANDS[@]}"); then
-
-        print_help_and_quit $INSTANCE 1
-
-    fi
-
-
-    if [ $CREATE == $USER_SUB_COMMAND ]; then
-
-        _handle_flags
-
-        _create_instance_and_related_resources
-
-    elif [ $DELETE == $USER_SUB_COMMAND ]; then
-
-        _handle_flags
-
-        _delete_instance_and_related_resources
-
-    elif [ $PRUNE == $USER_SUB_COMMAND ]; then
-
-        _handle_flags
-
-        _delete_all_but_most_recent_instance
-
-    else
-
-        print_help_and_quit $INSTANCE 0
-
-    fi
-}
-
-handle_snapshot() {
-    
-    ##
-    #   HANDLE INPUT - technically not required due to local variables in main() as this shares same context
-    ##
-
-
-    local USER_SUB_COMMAND=$1
-    
-    local USER_FLAGS=(${@:2})
-
-
-    ##
-    #   RUN
-    ##
-
-
-    if ! (is_in_list $USER_SUB_COMMAND "${SNAPSHOT_SUB_COMMANDS[@]}"); then
-
-        print_help_and_quit $SNAPSHOT 1
-
-    fi
-
-
-    if [ $DELETE == $USER_SUB_COMMAND ]; then
-
-        _handle_flags
-
-        _delete_most_recent_snapshot
-
-    elif [ $PRUNE == $USER_SUB_COMMAND ]; then
-
-        _handle_flags
-
-        _delete_all_but_most_recent_snapshot
-
-    else
-
-        print_help_and_quit $SNAPSHOT 0
-
-    fi
-}
+fi

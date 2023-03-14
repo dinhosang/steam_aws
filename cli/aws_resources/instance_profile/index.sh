@@ -1,102 +1,138 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_aws_resources_instance_profile_module() {
+    
+    export AWS_RESOURCES_INSTANCE_PROFILE_MODULE_IMPORTED=true
 
 
-source ./cli/config/index.sh
-
-source ./cli/helpers/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
+    source ./cli/config/index.sh
+
+    source ./cli/helpers/index.sh
+    source ./cli/aws_resources/instance_profile/helpers.sh
 
 
-_create_instance_profile(){
-
-    echo "START: Create instance profile"
+    ###
 
 
-    ##
-    #   CREATE INSTANCE PROFILE
-    ##
+    create_instance_profile(){
+
+        log_start "create instance profile"
 
 
-    {
-        # try
+        ###
 
-        echo "STEP: Checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
 
-        _check_profile_exists
+        local profile_exists=true
 
-    } || {
-        
-        # catch
+        {
+            # try
 
-        echo "STEP: Creating instance profile '$INSTANCE_PROFILE_NAME'"
+            log_step "checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
 
-        local _result=$(aws --profile $AWS_PROFILE iam create-instance-profile \
-            --region $AWS_REGION \
-            --instance-profile-name $INSTANCE_PROFILE_NAME
-        )
+            does_profile_exist_throw_if_not
 
-        local _result=$(aws --profile $AWS_PROFILE iam wait instance-profile-exists \
-            --region $AWS_REGION \
-            --instance-profile-name $INSTANCE_PROFILE_NAME
-        )
+        } || {
+            
+            # catch
+
+            profile_exists=false
+        }
+
+
+        ###
+
+
+        if [ $profile_exists == true ]; then
+
+            log_info "instance profile '$INSTANCE_PROFILE_NAME' alrady exists - skipping creation"
+
+        else
+
+            log_step "creating instance profile '$INSTANCE_PROFILE_NAME'"
+
+            local _result=$(aws --profile $AWS_PROFILE iam create-instance-profile \
+                --region $AWS_REGION \
+                --instance-profile-name $INSTANCE_PROFILE_NAME
+            )
+
+            local _result=$(aws --profile $AWS_PROFILE iam wait instance-profile-exists \
+                --region $AWS_REGION \
+                --instance-profile-name $INSTANCE_PROFILE_NAME
+            )
+
+        fi
+
+
+        ###
+
+
+        log_finish "create instance profile"
     }
 
-    echo "FINISH: Create instance profile"
-}
+    delete_instance_profile(){
 
-_delete_instance_profile(){
-
-    echo "START: Delete instance profile"
+        log_start "delete instance profile"
 
 
-    ##
-    #   CREATE INSTANCE PROFILE
-    ##
+        ###
 
 
-    local profile_exists=true
+        local profile_exists=true
 
-    {
-        # try
+        {
+            # try
 
-        echo "STEP: Checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
+            log_step "checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
 
-        _check_profile_exists
+            does_profile_exist_throw_if_not
 
-    } || {
-        
-        # catch
+        } || {
+            
+            # catch
 
-        profile_exists=false
-        
+            profile_exists=false
+            
+        }
+
+
+        ###
+
+
+        if [ $profile_exists == true ]; then
+
+            log_step "deleting instance profile '$INSTANCE_PROFILE_NAME'"
+
+            local _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
+                --region $AWS_REGION \
+                --instance-profile-name $INSTANCE_PROFILE_NAME
+            )
+
+            log_step "instance profile '$INSTANCE_PROFILE_NAME' deleted"
+
+        else
+
+            log_info "instance profile '$INSTANCE_PROFILE_NAME' does not exist - skipping deletion"
+
+        fi
+
+
+        ###
+
+
+        log_finish "delete instance profile"
     }
-
-
-    if [ $profile_exists == true ]; then
-
-        echo "STEP: deleting instance profile '$INSTANCE_PROFILE_NAME'"
-
-        local _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
-            --region $AWS_REGION \
-            --instance-profile-name $INSTANCE_PROFILE_NAME
-        )
-
-        echo "STEP: instance profile '$INSTANCE_PROFILE_NAME' deleted"
-
-    else
-
-        echo "STEP: instance profile '$INSTANCE_PROFILE_NAME' does not exists - skipping delete"
-
-    fi
-
-    echo "FINISH: Delete instance profile"
 }
+
+
+###
+
+
+if [ -z $AWS_RESOURCES_INSTANCE_PROFILE_MODULE_IMPORTED ]; then 
+
+    _aws_resources_instance_profile_module
+
+fi

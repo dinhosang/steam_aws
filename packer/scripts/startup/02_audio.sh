@@ -74,8 +74,3 @@ create_startup_audio
 
 
 echo "FINISH: creating startup script to fix audio issues for pulseaudio"
-
-
-# douglas TODO: remove below once not needed
-# systemctl --user status pulseaudio
-# systemctl --user enable pulseaudio

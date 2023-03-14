@@ -1,81 +1,94 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
+_subcommands_snapshot_module() {
+
+    export SUBCOMMANDS_SNAPSHOT_MODULE_IMPORTED=true
 
 
-source ./cli/config/index.sh
-
-source ./cli/helpers/index.sh
-
-source ./cli/aws_resources/snapshot/index.sh
+    ###
 
 
-##
-#   FUNCTIONS
-##
-
-
-_delete_all_but_most_recent_snapshot() {
+    source ./cli/config/index.sh
     
-    echo "START: prune volume snapshots"
+    source ./cli/helpers/index.sh
+    source ./cli/aws_resources/snapshot/helpers.sh
+
+    source ./cli/aws_resources/snapshot/index.sh
+
+
+    ###
+
     
+    delete_all_but_most_recent_snapshot() {
+    
+        log_start "prune volume snapshots"
+        
 
-    ##
-    #   SNAPSHOTS - RETRIEVE IDs
-    ##
-
-
-    local snapshot_ids=($(_get_volume_snapshot_ids false))
-
-
-    if [ -z "$snapshot_ids" ]; then
-
-        echo "INFO: No additional snapshots found"
-
-    else
-
-        ##
-        #   SNAPSHOTS - DELETE
-        ##
+        ####
 
 
-       _delete_snapshot ${snapshot_ids[*]}
+        local snapshot_ids=($(get_volume_snapshot_ids false))
 
-    fi
 
-    echo "FINISH: prune volume snapshots"
+        ###
+
+
+        if [ -z "$snapshot_ids" ]; then
+
+            log_info "no additional snapshots found - skipping deletion"
+
+        else
+
+            delete_snapshot ${snapshot_ids[*]}
+
+        fi
+
+
+        ###
+
+
+        log_finish "prune volume snapshots"
+    }
+
+    delete_most_recent_snapshot() {
+        
+        log_start "delete most recent volume snapshot"
+        
+
+        ###
+
+
+        local snapshot_ids=($(get_volume_snapshot_ids true))
+
+
+        ###
+
+
+        if [ -z "$snapshot_ids" ]; then
+
+            log_info "no snapshot found - skipping deletion"
+
+        else
+
+            delete_snapshot ${snapshot_ids[*]}
+
+        fi
+
+
+        ###
+
+
+        log_finish "delete most recent volume snapshot"
+    }
 }
 
-_delete_most_recent_snapshot() {
-    
-    echo "START: delete most recent volume snapshot"
-    
 
-    ##
-    #   SNAPSHOTS - RETRIEVE IDs
-    ##
+###
 
 
-    local snapshot_ids=($(_get_volume_snapshot_ids true))
+if [ -z $SUBCOMMANDS_SNAPSHOT_MODULE_IMPORTED ]; then 
 
+    _subcommands_snapshot_module
 
-    if [ -z "$snapshot_ids" ]; then
-
-        echo "INFO: No snapshot found"
-
-    else
-
-        ##
-        #   SNAPSHOTS - DELETE
-        ##
-
-
-       _delete_snapshot ${snapshot_ids[*]}
-
-    fi
-
-    echo "FINISH: delete most recent volume snapshot"
-}
+fi

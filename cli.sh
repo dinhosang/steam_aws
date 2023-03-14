@@ -1,29 +1,20 @@
 #!/bin/bash
 
 
-##
-#   IMPORTS / EXPORTS
-##
-
-
 source ./cli/index.sh
 
 
-##
-#   MAIN
-##
+###
 
 
 main(){
 
-    ##
-    #  VALIDATE COMMAND
-    ##
-
-
     local USER_COMMAND=$1
     local USER_SUB_COMMAND=$2
     local USER_FLAGS=(${@:3})
+
+
+    ###
 
 
     if [ -z ${1+x} ]; then 
@@ -40,9 +31,7 @@ main(){
     fi
 
 
-    ##
-    #   HANDLE COMMAND
-    ##
+    ###
 
 
     if [ $AMI == $USER_COMMAND ]; then
@@ -63,6 +52,9 @@ main(){
 
     fi
 }
+
+
+###
 
 
 main "$@"
