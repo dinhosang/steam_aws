@@ -64,6 +64,7 @@ Keep that in mind if you see any errors, and refer back to this guide for the re
 * have awscli installed if running in terminal
     * and have an aws profile ready in your ~/.aws/config
 * have jq installed if running in terminal
+* have packer installed if running in terminal
 * setup the secrets file and any other config you wish to modify.
     * See [config section](#config) for details.
 

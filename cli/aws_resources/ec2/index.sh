@@ -49,9 +49,7 @@ _aws_resources_ec2_module() {
         local user_data_file_path="cli/aws_resources/ec2/user_data.txt"
         local user_data_file_path_copy="${user_data_file_path}.copy"
 
-        cp $user_data_file_path $user_data_file_path_copy
-
-        sed -i '' "s|{{STARTUP_SCRIPT_CONTROL_PATH}}|${STARTUP_SCRIPT_CONTROL_PATH}|" $user_data_file_path_copy
+        sed -e "s|{{STARTUP_SCRIPT_CONTROL_PATH}}|${STARTUP_SCRIPT_CONTROL_PATH}|" $user_data_file_path > $user_data_file_path_copy
 
 
         ###
