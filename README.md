@@ -7,9 +7,11 @@ This repo contains a cli for controlling the basic lifecycle of a linux ec2 inst
 
 It can handle the creation, deletion, pruning, and updating of amis, ec2 instances, security-groups (sgs), and instance profiles.
 
-It uses the ip addresses the user would have entered into the config to ensure that only aws can ssh onto the instance, and only your chosen ip address can remote desktop onto the instance. It also retricts the outbound access to your chosen ip address.
+It uses the ip addresses the user would have entered into the config to ensure that only aws can ssh onto the instance, and only your chosen ip address can remote desktop onto the instance.
 
-douglas TODO: currently only set for inbound - check that outbound also works and if so then keep.
+There is funcitonality to also retrict the outbound access to your chosen ip addresses
+but it is currently commented out as it would require finding out what ports/ranges Steam requires to function.
+
 
 <br/>
 

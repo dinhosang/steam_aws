@@ -44,7 +44,6 @@ ROOT_VOLUME_SIZE=12
 
 
 INSTANCE_TYPE='t3a.medium'
-# INSTANCE_TYPE='g3s.xlarge'
 
 
 ##
