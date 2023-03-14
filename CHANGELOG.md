@@ -1,3 +1,9 @@
+## 0.6.2 (2023-03-14)
+
+### Refactor
+
+- **formatting**: shfmt auto-formatting
+
 ## 0.6.1 (2023-03-14)
 
 ### Refactor
