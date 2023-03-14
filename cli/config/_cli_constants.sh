@@ -39,6 +39,7 @@ PRUNE='prune'
 
 
 PROFILE_FLAG='-p'
+REGION_FLAG='-r'
 
 
 ##

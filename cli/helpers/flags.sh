@@ -54,6 +54,43 @@ _helpers_flags_module() {
         fi
     }
 
+    _handle_region_flag() {
+
+        local region=$AWS_REGION
+
+
+        ###
+
+
+        if is_in_list "$REGION_FLAG=.*" "${USER_FLAGS[@]}"; then
+
+            local region=$(get_flag_value_from_flags_list $REGION_FLAG)
+
+        fi
+
+
+        ###
+
+
+        export AWS_REGION=$region
+
+
+        ###
+
+
+        if [ -z $AWS_REGION ]; then
+
+            log_error "no AWS_REGION provided - please use cli/config/secrets.sh or pass in a region via the -r flag"
+
+            print_help_and_quit $HELP 1
+
+        else
+
+            log_info "setting AWS_REGION to '$AWS_REGION'"
+
+        fi
+    }
+
 
     ###
 
@@ -61,6 +98,8 @@ _helpers_flags_module() {
     handle_flags() {
 
         _handle_profile_flag
+
+        _handle_region_flag
 
     }
 }
