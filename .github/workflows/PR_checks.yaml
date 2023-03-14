@@ -1,0 +1,23 @@
+name: Run Build Checks on PR
+
+on: pull_request
+
+jobs:
+  pr_checks:
+    runs-on: ubuntu-latest
+    name: "Build and run docker image for build tool checks"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+      - name: Build image
+        run: ./_docker_tooling.sh build
+        shell: bash
+      - name: Create a temp secrets.sh for the linter
+        run: cp ./cli/config/example.secrets.sh ./cli/config/secrets.sh
+        shell: bash
+      - name: Run linter (shellcheck)
+        run: ./_docker_tooling.sh run lint
+        shell: bash
+      - name: Run formatter (shfmt)
+        run: ./_docker_tooling.sh run fmt
+        shell: bash
