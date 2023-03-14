@@ -1,8 +1,51 @@
 repos:
-- hooks:
-  - id: commitizen
-  - id: commitizen-branch
-    stages:
-    - push
-  repo: https://github.com/commitizen-tools/commitizen
-  rev: v2.42.1
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.42.1
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages:
+          - push
+  - repo: local
+    hooks:
+      - id: docker-image
+        name: build tooling docker image
+        entry: ./_docker_tooling.sh
+        language: script
+        always_run: true
+        fail_fast: true
+        description: build the tooling docker image for usage in later steps
+        args:
+          - build
+      - id: formatting
+        name: formatting check
+        entry: ./_docker_tooling.sh
+        language: script
+        always_run: true
+        fail_fast: true
+        description: runs shfmt to check that files are meeting its recommendations
+        args:
+          - run
+          - fmt
+      - id: test
+        name: run tests
+        entry: ./_docker_tooling.sh
+        language: script
+        always_run: true
+        fail_fast: true
+        description: runs shellspec to confirm tests are passing and coverage is met
+        args:
+          - run
+          - test
+      - id: lint
+        name: run linting
+        entry: ./_docker_tooling.sh
+        language: script
+        always_run: true
+        fail_fast: true
+        description: runs shellcheck to confirm files are meeting linters recommendations
+        args:
+          - run
+          - lint
+default_install_hook_types:
+  - pre-push
