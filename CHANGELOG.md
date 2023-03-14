@@ -1,3 +1,9 @@
+## 0.3.1 (2023-03-14)
+
+### Fix
+
+- **all**: added modules and header checks
+
 ## 0.3.0 (2023-03-14)
 
 ### Feat
