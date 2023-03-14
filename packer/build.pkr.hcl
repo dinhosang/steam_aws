@@ -56,6 +56,11 @@ build {
         destination = "/tmp/ucs_run_startup_script.txt"
     }
 
+    provisioner "file" {
+        source = "./packer/scripts/startup/helpers/ucs_always_run_startup_script.txt"
+        destination = "/tmp/ucs_always_run_startup_script.txt"
+    }
+
 
     //
 
@@ -104,21 +109,21 @@ build {
     //
 
 
-    // // NOTE: This does not currently solve the audio issue, leaving here to show another example of a startup script
-    // provisioner "file" {
-    //     source = "./packer/scripts/startup/02_audio/02_audio.txt"
-    //     destination = "/tmp/02_audio.txt"
-    // }
+    // NOTE: This does not currently solve the audio issue, leaving here to show another example of a startup script
+    provisioner "file" {
+        source = "./packer/scripts/startup/02_audio/02_audio.txt"
+        destination = "/tmp/02_audio.txt"
+    }
 
-    // // NOTE: This does not currently solve the audio issue, leaving here to show another example of a startup script
-    // provisioner "shell" {
-    //     script = "./packer/scripts/startup/02_audio/02_audio.sh"
-    //     execute_command = "chmod +x {{ .Path }}; echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
-    //     environment_vars = [
-    //         "DEBIAN_FRONTEND=noninteractive",
-    //         "STARTUP_DIR=${var.startup_dir}",
-    //         "STARTUP_SCRIPT_CONTROL_PATH=${var.startup_control_script_path}",
-    //         "STARTUP_COMPLETED_SCRIPT_PATH=${var.startup_completed_script_path}",
-    //     ]
-    // }
+    // NOTE: This does not currently solve the audio issue, leaving here to show another example of a startup script
+    provisioner "shell" {
+        script = "./packer/scripts/startup/02_audio/02_audio.sh"
+        execute_command = "chmod +x {{ .Path }}; echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+        environment_vars = [
+            "DEBIAN_FRONTEND=noninteractive",
+            "STARTUP_DIR=${var.startup_dir}",
+            "STARTUP_SCRIPT_CONTROL_PATH=${var.startup_control_script_path}",
+            "STARTUP_COMPLETED_SCRIPT_PATH=${var.startup_completed_script_path}",
+        ]
+    }
 }

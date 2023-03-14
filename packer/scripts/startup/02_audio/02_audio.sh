@@ -42,7 +42,8 @@ create_startup_audio() {
         "$FILE_NAME" \
         "$SCRIPT_DESTINATION_PATH" \
         "$STARTUP_COMPLETED_SCRIPT_PATH" \
-        "$STARTUP_SCRIPT_CONTROL_PATH"
+        "$STARTUP_SCRIPT_CONTROL_PATH" \
+        false
 
     ###
 

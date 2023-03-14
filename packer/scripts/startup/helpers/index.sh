@@ -112,6 +112,8 @@ _packer_scripts_startup_helpers_module() {
 
         local -r STARTUP_SCRIPT_CONTROL_PATH="$4"
 
+        local -r SHOULD_ALWAYS_RUN="$5"
+
         ###
 
         if [ -z "${FILE_NAME}" ]; then
@@ -146,9 +148,37 @@ _packer_scripts_startup_helpers_module() {
 
         fi
 
+        if [ -z "${SHOULD_ALWAYS_RUN}" ]; then
+
+            echo "ERROR: pass in a boolean for whether the script should always run at startup to update_controller_script_to_run_startup_script_on_instance()"
+
+            exit 1
+
+        fi
+
         ###
 
-        local -r PACKER_BUILD_SCRIPT_TEXT_PATH=/tmp/ucs_run_startup_script.txt
+        local PACKER_BUILD_SCRIPT_TEXT_PATH
+
+        if [[ "${SHOULD_ALWAYS_RUN}" == true ]]; then
+
+            echo "STEP: setting '${FILE_NAME}' to always run at every startup"
+
+            PACKER_BUILD_SCRIPT_TEXT_PATH=/tmp/ucs_always_run_startup_script.txt
+
+        elif [[ "${SHOULD_ALWAYS_RUN}" == false ]]; then
+
+            echo "STEP: setting '${FILE_NAME}' to only run at very first startup"
+
+            PACKER_BUILD_SCRIPT_TEXT_PATH=/tmp/ucs_run_startup_script.txt
+
+        else
+
+            echo "ERROR: pass in a boolean for whether script should always run at startup to update_controller_script_to_run_startup_script_on_instance()"
+
+            exit 1
+
+        fi
 
         ###
 
