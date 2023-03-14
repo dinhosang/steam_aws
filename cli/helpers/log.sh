@@ -32,14 +32,14 @@ _helpers_log_module() {
 
         local TEXT=$1
 
-        _log $LOG_ERROR "\n\nERROR: $TEXT"
+        _log $LOG_ERROR "\n\nERROR: $TEXT\n"
     }
 
     log_warn() {
 
         local TEXT=$1
 
-        _log $LOG_WARN "\n\nWARN: $TEXT"
+        _log $LOG_WARN "WARN: $TEXT"
     }
 
     log_info() {
@@ -53,14 +53,14 @@ _helpers_log_module() {
 
         local TEXT=$1
 
-        _log $LOG_START "\n\nSTART: $TEXT"
+        _log $LOG_START "\nSTART: $TEXT"
     }
 
     log_finish() {
 
         local TEXT=$1
 
-        _log $LOG_FINISH "FINISH: $TEXT\n\n"
+        _log $LOG_FINISH "FINISH: $TEXT\n"
     }
 
     log_step() {

@@ -38,7 +38,7 @@ _aws_resources_ec2_module() {
 
         local latest_ami_id=$(get_active_ami_ids true)
 
-        log_info "ami - '$latest_ami_id'"
+        log_info "using ami - '$latest_ami_id'"
 
 
         ###
@@ -73,7 +73,7 @@ _aws_resources_ec2_module() {
 
         local created_instance_id=$(echo $created_instance_details | jq -r '.Instances[0].InstanceId')
 
-        log_info "instance id - '$created_instance_id'"
+        log_info "created instance - '$created_instance_id'"
 
 
         ###
@@ -170,6 +170,8 @@ _aws_resources_ec2_module() {
             {
                 # try
 
+                log_step "confirming instance '$ec2_instance_id' was terminated"
+
                 is_instance_terminated_throw_if_not $ec2_instance_id
 
             } || {
@@ -180,9 +182,13 @@ _aws_resources_ec2_module() {
 
             }
 
+
+            ###
+
+
             if [ $instance_deleted == true ]; then
 
-                log_step "instance '$ec2_instance_id' terminated"
+                log_info "instance '$ec2_instance_id' terminated"
 
             else
 

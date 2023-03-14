@@ -83,7 +83,7 @@ _subcommands_instance_module() {
 
     delete_profile_sgs_instance(){
 
-        log_start "deleting profile, sgs, and most recent instance"
+        log_start "deleting most recent instance, sgs, and profile"
 
 
         ###
@@ -122,7 +122,7 @@ _subcommands_instance_module() {
         ###
 
 
-        log_finish "deleting profile, sgs, and most recent instance"
+        log_finish "deleting most recent instance, sgs, and profile"
     }
 }
 
