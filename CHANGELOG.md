@@ -1,3 +1,9 @@
+## 0.7.0 (2023-03-14)
+
+### Feat
+
+- **packer-startup**: allow startup to always run
+
 ## 0.6.2 (2023-03-14)
 
 ### Refactor
