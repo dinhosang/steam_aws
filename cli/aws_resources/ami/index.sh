@@ -34,7 +34,7 @@ _create_ami_via_packer() {
         -var "startup_dir=$STARTUP_DIR" \
         -var "startup_control_script_path=$STARTUP_SCRIPT_CONTROL_PATH" \
         -var "startup_completed_script_path=$STARTUP_COMPLETED_SCRIPT_PATH" \
-        ./packer/steam-play-instance.pkr.hcl 
+        ./packer
 
     echo "FINISH: create AMI via packer"
 }
@@ -84,7 +84,38 @@ _delete_ami() {
             --image-id $ami_id
         )
 
-        echo "STEP: ami '$ami_id' de-registered"
+
+        ##
+        #   AMI - CONFIRM DELETION
+        ##
+
+
+        local image_deleted=false
+
+        {
+            # try
+
+            echo "STEP: checking ami '$ami_id' was de-registered"
+
+            _check_image_exists $ami_id
+
+        } || {
+            
+            # catch
+
+            image_deleted=true
+
+        }
+
+        if [ $image_deleted == true ]; then
+
+            echo "STEP: ami '$ami_id' de-registered"
+
+        else
+
+            echo "WARN: ami '$ami_id' may NOT have been deleted"
+
+        fi
 
     done
 

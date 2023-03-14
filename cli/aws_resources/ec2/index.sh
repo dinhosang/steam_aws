@@ -10,9 +10,6 @@ source ./cli/config/index.sh
 
 source ./cli/helpers/index.sh
 
-source ./cli/aws_resources/sg/index.sh
-source ./cli/aws_resources/instance_profile/index.sh
-
 
 ##
 #   FUNCTIONS
@@ -178,12 +175,30 @@ _delete_ec2(){
         ##
 
 
-        local _result=$(aws --profile $AWS_PROFILE ec2 wait instance-terminated \
-            --region $AWS_REGION \
-            --instance-ids $ec2_instance_id
-        )
+        local instance_deleted=true
 
-        echo "STEP: instance '$ec2_instance_id' terminated"
+        {
+            # try
+
+            _check_instance_terminated $ec2_instance_id
+
+        } || {
+            
+            # catch
+
+            instance_deleted=false
+
+        }
+
+        if [ $instance_deleted == true ]; then
+
+            echo "STEP: instance '$ec2_instance_id' terminated"
+
+        else
+
+            echo "WARN: instance '$ec2_instance_id' may NOT have been terminated"
+
+        fi
 
     done
 

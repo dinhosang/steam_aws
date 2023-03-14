@@ -57,3 +57,25 @@ _get_volume_snapshot_ids() {
 
     echo $snapshot_ids
 }
+
+_check_snapshot_exists() {
+
+    ##
+    #   REQUIRED INPUT
+    ##
+
+
+    if [ -z ${1+x} ]; then 
+        
+        printf 'SNAPSHOT_ID not found - Must be passed in as first argument to function.\n\n'
+
+        exit 1
+
+    fi
+
+    local SNAPSHOT_ID=$1
+
+    aws --profile $AWS_PROFILE ec2 describe-snapshots \
+        --region $AWS_REGION \
+        --snapshot-ids $SNAPSHOT_ID > /dev/null 2>&1
+}

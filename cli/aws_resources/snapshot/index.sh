@@ -8,6 +8,8 @@
 
 source ./cli/config/index.sh
 
+source ./cli/helpers/index.sh
+
 
 ##
 #   FUNCTIONS
@@ -59,7 +61,30 @@ _delete_snapshot() {
             --snapshot-id $snapshot_id
         )
 
-        echo "STEP: volume snapshot '$snapshot_id' deleted"
+        local snapshot_deleted=false
+
+        {
+            # try
+
+            _check_snapshot_exists $snapshot_id
+
+        } || {
+            
+            # catch
+
+            snapshot_deleted=true
+
+        }
+
+        if [ $snapshot_deleted == true ]; then
+
+            echo "STEP: volume snapshot '$snapshot_id' deleted"
+
+        else
+
+            echo "WARN: volume snapsthot '$snapshot_id' may NOT have been deleted"
+
+        fi
 
     done
 

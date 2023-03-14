@@ -6,8 +6,7 @@
 ##
 
 
-source ./cli/aws_resources/sg/_base_helper.sh
-source ./cli/aws_resources/ip/index.sh
+source ./cli/helpers/index.sh
 
 
 ##

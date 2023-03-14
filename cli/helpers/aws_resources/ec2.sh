@@ -65,3 +65,25 @@ _get_running_instance_ids() {
 
     echo $instance_ids
 }
+
+_check_instance_terminated() {
+
+    ##
+    #   REQUIRED INPUT
+    ##
+
+
+    if [ -z ${1+x} ]; then 
+        
+        printf 'INSTANCE_ID not found - Must be passed in as first argument to function.\n\n'
+
+        exit 1
+
+    fi
+
+    local INSTANCE_ID=$1
+
+    aws --profile $AWS_PROFILE ec2 wait instance-terminated \
+        --region $AWS_REGION \
+        --instance-ids $INSTANCE_ID > /dev/null 2>&1
+}

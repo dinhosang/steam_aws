@@ -8,6 +8,8 @@
 
 source ./cli/config/index.sh
 
+source ./cli/helpers/index.sh
+
 
 ##
 #   FUNCTIONS
@@ -29,9 +31,7 @@ _create_instance_profile(){
 
         echo "STEP: Checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
 
-        aws --profile $AWS_PROFILE iam wait instance-profile-exists \
-            --region $AWS_REGION \
-            --instance-profile-name $INSTANCE_PROFILE_NAME
+        _check_profile_exists
 
     } || {
         
@@ -63,10 +63,40 @@ _delete_instance_profile(){
     ##
 
 
-    local _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
-        --region $AWS_REGION \
-        --instance-profile-name $INSTANCE_PROFILE_NAME
-    )
+    local profile_exists=true
+
+    {
+        # try
+
+        echo "STEP: Checking if instance profile '$INSTANCE_PROFILE_NAME' exists"
+
+        _check_profile_exists
+
+    } || {
+        
+        # catch
+
+        profile_exists=false
+        
+    }
+
+
+    if [ $profile_exists == true ]; then
+
+        echo "STEP: deleting instance profile '$INSTANCE_PROFILE_NAME'"
+
+        local _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
+            --region $AWS_REGION \
+            --instance-profile-name $INSTANCE_PROFILE_NAME
+        )
+
+        echo "STEP: instance profile '$INSTANCE_PROFILE_NAME' deleted"
+
+    else
+
+        echo "STEP: instance profile '$INSTANCE_PROFILE_NAME' does not exists - skipping delete"
+
+    fi
 
     echo "FINISH: Delete instance profile"
 }

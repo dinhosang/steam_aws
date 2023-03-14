@@ -45,6 +45,51 @@ _get_sg_name() {
     echo "$SG_NAME_PREFIX-sg"
 }
 
+_check_security_group_exists(){
+
+    ##
+    #   REQUIRED INPUT
+    ##
+
+
+    if [ -z ${1+x} ]; then 
+        
+        printf 'SG_NAME not found - Must be passed in as first argument to function.\n\n'
+
+        exit 1
+
+    fi
+
+    local SG_NAME=$1
+
+    aws --profile $AWS_PROFILE ec2 describe-security-groups \
+        --region $AWS_REGION \
+        --group-names $SG_NAME > /dev/null 2>&1
+    
+}
+
+_wait_for_security_group_to_exist() {
+
+    ##
+    #   REQUIRED INPUT
+    ##
+
+
+    if [ -z ${1+x} ]; then 
+        
+        printf 'SG_NAME not found - Must be passed in as first argument to function.\n\n'
+
+        exit 1
+
+    fi
+
+    local SG_NAME=$1
+
+    aws --profile $AWS_PROFILE ec2 wait security-group-exists \
+        --region $AWS_REGION \
+        --group-names $SG_NAME > /dev/null 2>&1
+}
+
 _create_sg(){
 
     echo "START: Create SG"
@@ -139,18 +184,28 @@ _create_sg(){
     ##
 
 
+    local sg_exists=true
+
     {
         # try
 
         echo "STEP: Checking if '$SG_NAME' exists"
 
-        aws --profile $AWS_PROFILE ec2 wait security-group-exists \
-            --region $AWS_REGION \
-            --group-names $SG_NAME
+        _check_security_group_exists $SG_NAME
 
     } || {
         
         # catch
+
+        sg_exists=false
+
+    }
+
+    if [ $sg_exists == true ]; then
+
+        echo "STEP: '$SG_NAME' already exists - skipping creation"
+
+    else
 
         echo "STEP: Creating '$SG_NAME'"
 
@@ -159,7 +214,40 @@ _create_sg(){
             --group-name $SG_NAME \
             --description "$SG_DESC"
         )
-    }
+
+        ##
+        #   SG - CONFIRM EXISTS
+        ##
+
+
+        local sg_created=true
+
+        {
+            # try
+
+            _wait_for_security_group_to_exist $SG_NAME
+
+        } || {
+            
+            # catch
+
+            sg_created=false
+
+        }
+
+        if [ $sg_created == true ]; then
+
+            echo "STEP: '$SG_NAME' created"
+
+        else
+
+            echo "ERROR: issue creating '$SG_NAME'"
+
+            exit 1
+
+        fi
+
+    fi
 
 
     ##
@@ -167,28 +255,24 @@ _create_sg(){
     ##
 
 
-    echo "STEP: adding ip/port rules to '$SG_NAME'"
+    {
+        # try
 
-    local _result=$(aws --profile $AWS_PROFILE ec2 authorize-security-group-ingress \
-        --region $AWS_REGION \
-        --group-name $SG_NAME \
-        --ip-permissions IpProtocol=$IP_PROTOCOL,FromPort=$FROM_PORT,ToPort=$TO_PORT,IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES"
-    )
+        echo "STEP: adding ip/port rules to '$SG_NAME'"
 
+        aws --profile $AWS_PROFILE ec2 authorize-security-group-ingress \
+            --region $AWS_REGION \
+            --ip-permissions IpProtocol=$IP_PROTOCOL,FromPort=$FROM_PORT,ToPort=$TO_PORT,IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES" \
+            --group-name $SG_NAME > /dev/null
 
-    ##
-    #   DESCRIBE SECURITY GROUP
-    ##
+    } || {
+        
+        # catch
 
+        echo "STEP: ip/port rules already existed on '$SG_NAME', continuing with next steps"
 
-    description=$(aws --profile $AWS_PROFILE ec2 describe-security-groups \
-        --region $AWS_REGION \
-        --group-names $SG_NAME
-    )
+    }
 
-    description_clean=$(echo ${description} | jq -r '.' )
-
-    echo "$description_clean"
 }
 
 _delete_sg(){
@@ -232,15 +316,11 @@ _delete_sg(){
 
         echo "STEP: Checking if '$SG_NAME' exists"
 
-        aws --profile $AWS_PROFILE ec2 wait security-group-exists \
-            --region $AWS_REGION \
-            --group-names $SG_NAME
+        _check_security_group_exists $SG_NAME
 
     } || {
         
         # catch
-
-        echo "INFO: '$SG_NAME' security group could not be found"
 
         sg_exists=false
     }
@@ -261,8 +341,13 @@ _delete_sg(){
 
         echo "STEP: $SG_NAME - has been deleted"
 
+    else
+
+        echo "INFO: could not find security group named '$SG_NAME' - skipping delete"
+
     fi
 
     echo "FINISH: Delete SG"
 
 }
+
