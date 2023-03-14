@@ -1,3 +1,9 @@
+## 0.6.1 (2023-03-14)
+
+### Refactor
+
+- **packer**: refactored packer startup scripts
+
 ## 0.6.0 (2023-03-14)
 
 ### Feat
