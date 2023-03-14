@@ -1,3 +1,9 @@
+## 0.3.0 (2023-03-14)
+
+### Feat
+
+- **aws_resources**: added more checks for task completion
+
 ## 0.2.0 (2023-03-14)
 
 ### Feat
