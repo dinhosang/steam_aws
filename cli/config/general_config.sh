@@ -14,8 +14,8 @@
 ##
 
 
-AMI_NAME='steam_play_instance'
-AMI_SNAPSHOT_TAG_PURPOSE='steam_play_instance'
+export AMI_NAME='steam_play_instance'
+export AMI_SNAPSHOT_TAG_PURPOSE='steam_play_instance'
 
 
 ##
@@ -23,8 +23,8 @@ AMI_SNAPSHOT_TAG_PURPOSE='steam_play_instance'
 ##
 
 
-TAG_KEY_PURPOSE='Purpose'
-TAG_KEY_OS_VERSION='OS_Version'
+export TAG_KEY_PURPOSE='Purpose'
+export TAG_KEY_OS_VERSION='OS_Version'
 
 
 ##
@@ -32,8 +32,8 @@ TAG_KEY_OS_VERSION='OS_Version'
 ##
 
 
-SG_NAME_PREFIX_AWS_CONNECT='ssh'
-SG_NAME_PREFIX_RDP='rdp'
+export SG_NAME_PREFIX_AWS_CONNECT='ssh'
+export SG_NAME_PREFIX_RDP='rdp'
 
 
 ##
@@ -41,8 +41,8 @@ SG_NAME_PREFIX_RDP='rdp'
 ##
 
 
-INSTANCE_PROFILE_NAME='steam_server'
-INSTANCE_TAG_PURPOSE='steam_server'
+export INSTANCE_PROFILE_NAME='steam_server'
+export INSTANCE_TAG_PURPOSE='steam_server'
 
 
 ##
@@ -50,9 +50,9 @@ INSTANCE_TAG_PURPOSE='steam_server'
 ##
 
 
-STARTUP_DIR=/startup
-STARTUP_SCRIPT_CONTROL_PATH=/startup/00_startup.sh
-STARTUP_COMPLETED_SCRIPT_PATH=/startup/startup_completed.txt
+export STARTUP_DIR=/startup
+export STARTUP_SCRIPT_CONTROL_PATH=/startup/00_startup.sh
+export STARTUP_COMPLETED_SCRIPT_PATH=/startup/startup_completed.txt
 
 
 ##
@@ -60,16 +60,16 @@ STARTUP_COMPLETED_SCRIPT_PATH=/startup/startup_completed.txt
 ##
 
 
-ANSI_PREFIX='\033['
-ANSI_SUFFIX='m'
+export ANSI_PREFIX='\033['
+export ANSI_SUFFIX='m'
 
-ANSI_RED="${ANSI_PREFIX}1;31${ANSI_SUFFIX}"
-ANSI_YELLOW="${ANSI_PREFIX}1;33${ANSI_SUFFIX}"
-ANSI_GREEN="${ANSI_PREFIX}1;32${ANSI_SUFFIX}"
-ANSI_CYAN="${ANSI_PREFIX}1;36${ANSI_SUFFIX}"
-ANSI_GREY="${ANSI_PREFIX}0;37${ANSI_SUFFIX}"
+export ANSI_RED="${ANSI_PREFIX}1;31${ANSI_SUFFIX}"
+export ANSI_YELLOW="${ANSI_PREFIX}1;33${ANSI_SUFFIX}"
+export ANSI_GREEN="${ANSI_PREFIX}1;32${ANSI_SUFFIX}"
+export ANSI_CYAN="${ANSI_PREFIX}1;36${ANSI_SUFFIX}"
+export ANSI_GREY="${ANSI_PREFIX}0;37${ANSI_SUFFIX}"
 
-ANSI_CLEAR="${ANSI_PREFIX}0${ANSI_SUFFIX}"
+export ANSI_CLEAR="${ANSI_PREFIX}0${ANSI_SUFFIX}"
 
 
 ##
@@ -77,9 +77,9 @@ ANSI_CLEAR="${ANSI_PREFIX}0${ANSI_SUFFIX}"
 ##
 
 
-LOG_ERROR=$ANSI_RED
-LOG_WARN=$ANSI_YELLOW
-LOG_INFO=$ANSI_GREEN
-LOG_START=$ANSI_CYAN
-LOG_FINISH=$ANSI_CYAN
-LOG_STEP=$ANSI_GREY
+export LOG_ERROR=$ANSI_RED
+export LOG_WARN=$ANSI_YELLOW
+export LOG_INFO=$ANSI_GREEN
+export LOG_START=$ANSI_CYAN
+export LOG_FINISH=$ANSI_CYAN
+export LOG_STEP=$ANSI_GREY

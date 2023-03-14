@@ -28,15 +28,15 @@ _aws_resources_ec2_module() {
         ###
 
 
-        local SG_NAME_AWS_CONN=$(get_sg_name $SG_NAME_PREFIX_AWS_CONNECT)
+        local -r SG_NAME_AWS_CONN=$(get_sg_name $SG_NAME_PREFIX_AWS_CONNECT)
 
-        local SG_NAME_RDP=$(get_sg_name $SG_NAME_PREFIX_RDP)
+        local -r SG_NAME_RDP=$(get_sg_name $SG_NAME_PREFIX_RDP)
 
 
         ###
 
 
-        local latest_ami_id=$(get_active_ami_ids true)
+        local -r latest_ami_id=$(get_active_ami_ids true)
 
         log_info "using ami - '$latest_ami_id'"
 
@@ -46,8 +46,8 @@ _aws_resources_ec2_module() {
 
         log_step 'setting up user data'
 
-        local user_data_file_path="cli/aws_resources/ec2/user_data.txt"
-        local user_data_file_path_copy="${user_data_file_path}.copy"
+        local -r user_data_file_path="cli/aws_resources/ec2/user_data.txt"
+        local -r user_data_file_path_copy="${user_data_file_path}.copy"
 
         sed -e "s|{{STARTUP_SCRIPT_CONTROL_PATH}}|${STARTUP_SCRIPT_CONTROL_PATH}|" $user_data_file_path > $user_data_file_path_copy
 
@@ -57,11 +57,11 @@ _aws_resources_ec2_module() {
 
         log_step "launching instance"
 
-        local created_instance_details=$(aws --profile $AWS_PROFILE ec2 run-instances \
+        local -r created_instance_details=$(aws --profile $AWS_PROFILE ec2 run-instances \
             --region $AWS_REGION \
             --instance-type $INSTANCE_TYPE \
-            --image-id $latest_ami_id \
-            --security-groups $SG_NAME_RDP $SG_NAME_AWS_CONN \
+            --image-id "$latest_ami_id" \
+            --security-groups "$SG_NAME_RDP" "$SG_NAME_AWS_CONN" \
             --iam-instance-profile Name=$INSTANCE_PROFILE_NAME \
             --block-device-mappings "DeviceName=$ROOT_VOLUME_NAME,Ebs={VolumeSize=$ROOT_VOLUME_SIZE}" \
             --user-data file://${user_data_file_path_copy} \
@@ -69,7 +69,7 @@ _aws_resources_ec2_module() {
                 "ResourceType=volume,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$INSTANCE_TAG_PURPOSE}]"
         )
 
-        local created_instance_id=$(echo $created_instance_details | jq -r '.Instances[0].InstanceId')
+        local -r created_instance_id=$(echo "$created_instance_details" | jq -r '.Instances[0].InstanceId')
 
         log_info "created instance - '$created_instance_id'"
 
@@ -87,25 +87,29 @@ _aws_resources_ec2_module() {
 
         local instance_running=false
 
+        local -r sleep_seconds=5
+
         while [ $instance_running == false ]; do
 
-            local _instance_details_found=$(aws --profile $AWS_PROFILE ec2 describe-instance-status \
+            local instance_details_found
+
+            instance_details_found=$(aws --profile $AWS_PROFILE ec2 describe-instance-status \
                 --region $AWS_REGION \
-                --instance-ids $created_instance_id \
+                --instance-ids "$created_instance_id" \
                 --filters "Name=instance-state-name, Values=running"
             )
 
-            local is_instance_running=$(echo $_instance_details_found | jq -r '.InstanceStatuses != []')
+            local is_instance_running
 
-            if [ $is_instance_running == true ]; then
+            is_instance_running=$(echo "$instance_details_found" | jq -r '.InstanceStatuses != []')
+
+            if [ "$is_instance_running" == true ]; then
 
                 instance_running=true
 
                 log_info "instance has a running state, but may still need to finish initialising before it can be used."
 
             else
-
-                local sleep_seconds=5
 
                 log_info "instance '$created_instance_id' not yet running"
 
@@ -144,19 +148,25 @@ _aws_resources_ec2_module() {
         ###
 
 
-        local INSTANCE_IDS=(${@})
+        local instance_ids_to_delete
+
+        read -r -a instance_ids_to_delete <<< "${*}"
+
+        log_info "instances to terminate: '[${instance_ids_to_delete[*]}]'"
 
 
         ###
 
 
-        for ec2_instance_id in ${INSTANCE_IDS[*]}; do
+        for ec2_instance_id in "${instance_ids_to_delete[@]}"; do
 
             log_step "terminating instance - '$ec2_instance_id'"
 
-            local _result=$(aws --profile $AWS_PROFILE ec2 terminate-instances \
+            local _result
+
+            _result=$(aws --profile $AWS_PROFILE ec2 terminate-instances \
                 --region $AWS_REGION \
-                --instance-ids $ec2_instance_id
+                --instance-ids "$ec2_instance_id"
             )
 
 
@@ -170,7 +180,7 @@ _aws_resources_ec2_module() {
 
                 log_step "confirming instance '$ec2_instance_id' was terminated"
 
-                is_instance_terminated_throw_if_not $ec2_instance_id
+                is_instance_terminated_throw_if_not "$ec2_instance_id"
 
             } || {
                 

@@ -30,13 +30,13 @@ _tools_docker_tooling_module() {
 
     run_shellcheck_tooling() {
 
-        local cli_dir=$(pwd)
+        local -r cli_dir=$(pwd)
 
         docker run \
             --rm \
-            -v $cli_dir:/src \
+            -v "$cli_dir":/src \
             -t \
-            $STEAM_AWS_TOOLING_IMAGE "shellcheck -a -x -f tty --norc -s bash -S style cli.sh"
+            $STEAM_AWS_TOOLING_IMAGE "shellcheck -a -x -f tty --norc -s bash -S style *.sh"
     }
 
 
@@ -48,7 +48,7 @@ _tools_docker_tooling_module() {
         local BUILD='build'
         local RUN='run'
 
-        local ACCEPTED_ACTIONS=($BUILD $RUN)
+        local ACCEPTED_ACTIONS=("$BUILD" "$RUN")
 
 
         ###
@@ -56,7 +56,7 @@ _tools_docker_tooling_module() {
 
         if [ -z ${1+x} ]; then
 
-            echo "please enter one of: [${ACCEPTED_ACTIONS[@]}]"
+            echo "please enter one of: [${ACCEPTED_ACTIONS[*]}]"
 
             exit 1
 
@@ -68,9 +68,9 @@ _tools_docker_tooling_module() {
         ###
 
 
-        if ! (_is_in_list $TOOLING_BUILD_SCRIPT_ACTION "${ACCEPTED_ACTIONS[@]}"); then
+        if ! (_is_in_list "$TOOLING_BUILD_SCRIPT_ACTION" "${ACCEPTED_ACTIONS[@]}"); then
 
-            echo "please enter one of: [${ACCEPTED_ACTIONS[@]}]"
+            echo "please enter one of: [${ACCEPTED_ACTIONS[*]}]"
 
             exit 1
 
@@ -80,7 +80,7 @@ _tools_docker_tooling_module() {
         ###
 
 
-        if [ $TOOLING_BUILD_SCRIPT_ACTION == $BUILD ]; then
+        if [ $BUILD == "$TOOLING_BUILD_SCRIPT_ACTION"  ]; then
 
             build_tooling_image
 

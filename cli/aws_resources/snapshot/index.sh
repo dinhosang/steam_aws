@@ -37,13 +37,17 @@ _aws_resources_snapshot_module() {
         ###
 
 
-        local SNAPSHOT_IDS=(${@})
+        local snapshot_ids_to_delete
+
+        read -r -a snapshot_ids_to_delete <<< "${*}"
+
+        log_info "snapshots to terminate: '[${snapshot_ids_to_delete[*]}]'"
 
 
         ###
 
 
-        for snapshot_id in ${SNAPSHOT_IDS[*]}; do
+        for snapshot_id in "${snapshot_ids_to_delete[@]}"; do
 
             log_step "deleting volume snapshot - '$snapshot_id'"
 
@@ -51,9 +55,11 @@ _aws_resources_snapshot_module() {
             ###
 
 
-            local _result=$(aws --profile $AWS_PROFILE ec2 delete-snapshot \
+            local _result
+
+            _result=$(aws --profile $AWS_PROFILE ec2 delete-snapshot \
                 --region $AWS_REGION \
-                --snapshot-id $snapshot_id
+                --snapshot-id "$snapshot_id"
             )
 
 
@@ -65,7 +71,7 @@ _aws_resources_snapshot_module() {
             {
                 # try
 
-                does_snapshot_exist_throw_if_not $snapshot_id
+                does_snapshot_exist_throw_if_not "$snapshot_id"
 
             } || {
                 

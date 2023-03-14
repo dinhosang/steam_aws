@@ -17,9 +17,9 @@ _helpers_log_module() {
 
     _log() {
         
-        local LINE_COLOUR=$1
+        local -r LINE_COLOUR=$1
 
-        local TEXT=$2
+        local -r TEXT=$2
 
         echo -e "${LINE_COLOUR}${TEXT}${ANSI_CLEAR}"
     }
@@ -30,44 +30,44 @@ _helpers_log_module() {
 
     log_error() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_ERROR "\n\nERROR: $TEXT\n"
+        _log "$LOG_ERROR" "\n\nERROR: $TEXT\n"
     }
 
     log_warn() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_WARN "WARN: $TEXT"
+        _log "$LOG_WARN" "WARN: $TEXT"
     }
 
     log_info() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_INFO "INFO: $TEXT"
+        _log "$LOG_INFO" "INFO: $TEXT"
     }
 
     log_start() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_START "\nSTART: $TEXT"
+        _log "$LOG_START" "\nSTART: $TEXT"
     }
 
     log_finish() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_FINISH "FINISH: $TEXT\n"
+        _log "$LOG_FINISH" "FINISH: $TEXT\n"
     }
 
     log_step() {
 
-        local TEXT=$1
+        local -r TEXT=$1
 
-        _log $LOG_STEP "STEP: $TEXT"
+        _log "$LOG_STEP" "STEP: $TEXT"
     }
 }
 

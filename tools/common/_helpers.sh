@@ -8,7 +8,7 @@ _tools_helpers_module() {
     _is_in_list() {
 
         local VALUE=$1
-        local LIST="${@:2}"
+        local LIST="${*:2}"
 
         if [[ ${LIST[*]} =~ (' '|^)$VALUE(' '|$) ]]; then
 

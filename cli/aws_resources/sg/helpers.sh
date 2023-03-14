@@ -104,8 +104,8 @@ _aws_resources_sg_helpers_module() {
 
             aws --profile $AWS_PROFILE ec2 authorize-security-group-ingress \
                 --region $AWS_REGION \
-                --ip-permissions IpProtocol=$IP_PROTOCOL,FromPort=$FROM_PORT,ToPort=$TO_PORT,IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES" \
-                --group-name $SG_NAME > /dev/null
+                --ip-permissions IpProtocol="$IP_PROTOCOL",FromPort="$FROM_PORT",ToPort="$TO_PORT",IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES" \
+                --group-name "$SG_NAME" > /dev/null
 
         } || {
 
@@ -203,8 +203,8 @@ _aws_resources_sg_helpers_module() {
 
             aws --profile $AWS_PROFILE ec2 authorize-security-group-egress \
                 --region $AWS_REGION \
-                --ip-permissions IpProtocol=$IP_PROTOCOL,FromPort=$FROM_PORT,ToPort=$TO_PORT,IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES" \
-                --group-id $SECURITY_GROUP_ID > /dev/null
+                --ip-permissions IpProtocol="$IP_PROTOCOL",FromPort="$FROM_PORT",ToPort="$TO_PORT",IpRanges="$IP_V4_RANGES",Ipv6Ranges="$IP_V6_RANGES" \
+                --group-id "$SECURITY_GROUP_ID" > /dev/null
 
         } || {
 
@@ -253,7 +253,7 @@ _aws_resources_sg_helpers_module() {
             aws --profile $AWS_PROFILE ec2 revoke-security-group-egress \
                 --region $AWS_REGION \
                 --ip-permissions '[{"IpProtocol":"-1","FromPort":-1,"ToPort":-1,"IpRanges":[{"CidrIp":"0.0.0.0/0"}] }]' \
-                --group-id $security_group_id > /dev/null
+                --group-id "$security_group_id" > /dev/null
 
         } || {
 
@@ -286,7 +286,7 @@ _aws_resources_sg_helpers_module() {
 
         aws --profile $AWS_PROFILE ec2 describe-security-groups \
             --region $AWS_REGION \
-            --group-names $SG_NAME > /dev/null 2>&1
+            --group-names "$SG_NAME" > /dev/null 2>&1
         
     }
 
@@ -312,7 +312,7 @@ _aws_resources_sg_helpers_module() {
 
         aws --profile $AWS_PROFILE ec2 wait security-group-exists \
             --region $AWS_REGION \
-            --group-names $SG_NAME > /dev/null 2>&1
+            --group-names "$SG_NAME" > /dev/null 2>&1
     }
 
     ###
@@ -409,21 +409,21 @@ _aws_resources_sg_helpers_module() {
         ###
 
 
-        local SG_NAME_PREFIX=$1
+        local -r SG_NAME_PREFIX=$1
 
-        local SG_DESC=$2
+        local -r SG_DESC=$2
 
-        local IP_PROTOCOL=$3
+        local -r IP_PROTOCOL=$3
 
-        local FROM_PORT=$4
+        local -r FROM_PORT=$4
 
-        local TO_PORT=$5
+        local -r TO_PORT=$5
 
-        local IP_V4_RANGES=$6
+        local -r IP_V4_RANGES=$6
 
-        local IP_V6_RANGES=$7
+        local -r IP_V6_RANGES=$7
 
-        local SG_NAME=$(get_sg_name $SG_NAME_PREFIX)
+        local -r SG_NAME=$(get_sg_name "$SG_NAME_PREFIX")
 
 
         ###
@@ -436,7 +436,7 @@ _aws_resources_sg_helpers_module() {
 
             log_step "checking if '$SG_NAME' exists"
 
-            _check_security_group_exists $SG_NAME
+            _check_security_group_exists "$SG_NAME"
 
         } || {
             
@@ -456,14 +456,14 @@ _aws_resources_sg_helpers_module() {
 
             log_step "creating sg - '$SG_NAME'"
 
-            local security_group_id_raw=$(aws --profile $AWS_PROFILE ec2 create-security-group \
+            local -r security_group_id_raw=$(aws --profile $AWS_PROFILE ec2 create-security-group \
                 --region $AWS_REGION \
-                --group-name $SG_NAME \
+                --group-name "$SG_NAME" \
                 --description "$SG_DESC" \
                 --query "GroupId"
             )
 
-            local security_group_id=$(echo $security_group_id_raw | jq -r '.')
+            local -r security_group_id=$(echo "$security_group_id_raw" | jq -r '.')
 
             
             ###
@@ -476,7 +476,7 @@ _aws_resources_sg_helpers_module() {
 
                 log_step "checking '$SG_NAME' was created"
 
-                _wait_for_security_group_to_exist $SG_NAME
+                _wait_for_security_group_to_exist "$SG_NAME"
 
             } || {
                 
@@ -504,13 +504,13 @@ _aws_resources_sg_helpers_module() {
         ###
 
 
-        _add_ingress_rules_to_sg $SG_NAME \
-            $IP_PROTOCOL \
-            $FROM_PORT \
-            $TO_PORT \
+        _add_ingress_rules_to_sg "$SG_NAME" \
+            "$IP_PROTOCOL" \
+            "$FROM_PORT" \
+            "$TO_PORT" \
             "$IP_V4_RANGES" \
             "$IP_V6_RANGES" \
-            $security_group_id
+            "$security_group_id"
 
 
         ###
@@ -571,9 +571,9 @@ _aws_resources_sg_helpers_module() {
         ###
 
 
-        local SG_NAME_PREFIX=$1
+        local -r SG_NAME_PREFIX=$1
 
-        local SG_NAME=$(get_sg_name $SG_NAME_PREFIX)
+        local -r SG_NAME=$(get_sg_name "$SG_NAME_PREFIX")
 
 
         ###
@@ -586,7 +586,7 @@ _aws_resources_sg_helpers_module() {
 
             log_step "checking if '$SG_NAME' exists"
 
-            _check_security_group_exists $SG_NAME
+            _check_security_group_exists "$SG_NAME"
 
         } || {
             
@@ -605,11 +605,11 @@ _aws_resources_sg_helpers_module() {
 
             aws --profile $AWS_PROFILE ec2 delete-security-group \
                     --region $AWS_REGION \
-                    --group-name $SG_NAME
+                    --group-name "$SG_NAME"
 
         else
 
-            log_info "could not find security group named '$SG_NAME' - skipping delete"
+            log_info "could not find security group named '$SG_NAME' - skipping deletion"
 
         fi
 

@@ -14,8 +14,8 @@ source ./cli/config/secrets.sh
 ##
 
 
-AWS_REGION=$_AWS_REGION
-AWS_PROFILE=$_AWS_PROFILE
+export AWS_REGION=$_AWS_REGION
+export AWS_PROFILE=$_AWS_PROFILE
 
 
 ##
@@ -23,10 +23,10 @@ AWS_PROFILE=$_AWS_PROFILE
 ##
 
 
-OS_VERSION='Ubuntu-22.04'
-OS_SOURCE_AMI_NAME='ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*'
-INSTANCE_LOGIN_USER_NAME='ubuntu'
-INSTANCE_LOGIN_USER_PASSWORD=$_INSTANCE_LOGIN_USER_PASSWORD
+export OS_VERSION='Ubuntu-22.04'
+export OS_SOURCE_AMI_NAME='ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*'
+export INSTANCE_LOGIN_USER_NAME='ubuntu'
+export INSTANCE_LOGIN_USER_PASSWORD=$_INSTANCE_LOGIN_USER_PASSWORD
 
 
 ##
@@ -34,8 +34,8 @@ INSTANCE_LOGIN_USER_PASSWORD=$_INSTANCE_LOGIN_USER_PASSWORD
 ##
 
 
-ROOT_VOLUME_NAME='/dev/sda1'
-ROOT_VOLUME_SIZE=12
+export ROOT_VOLUME_NAME='/dev/sda1'
+export ROOT_VOLUME_SIZE=12
 
 
 ##
@@ -43,7 +43,7 @@ ROOT_VOLUME_SIZE=12
 ##
 
 
-INSTANCE_TYPE='t3a.medium'
+export INSTANCE_TYPE='t3a.medium'
 
 
 ##
@@ -51,5 +51,5 @@ INSTANCE_TYPE='t3a.medium'
 ##
 
 
-IP_V4=$_IP_V4
-IP_V6=$_IP_V6
+export IP_V4=$_IP_V4
+export IP_V6=$_IP_V6

@@ -47,19 +47,19 @@ _aws_resources_ec2_helpers_module() {
         ###
 
 
-        local instance_ids_json_array=$(aws --profile $AWS_PROFILE ec2 describe-instances \
+        local -r instance_ids_json_array=$(aws --profile $AWS_PROFILE ec2 describe-instances \
             --region $AWS_REGION \
             --filters "Name=tag:$TAG_KEY_PURPOSE,Values=$INSTANCE_TAG_PURPOSE" "Name=instance-state-name,Values=running" \
             --query "reverse(sort_by(Reservations[].Instances[],&LaunchTime))[$query_instance_array_indexes].[InstanceId][]"
         )
 
-        local instance_ids=$(echo ${instance_ids_json_array} | jq -r '.? | join(" ")' )
+        local -r instance_ids=$(echo "${instance_ids_json_array}" | jq -r '.? | join(" ")' )
 
 
         ###
 
 
-        echo $instance_ids
+        echo "$instance_ids"
     }
 
     is_instance_terminated_throw_if_not() {
@@ -72,7 +72,7 @@ _aws_resources_ec2_helpers_module() {
 
         fi
 
-        local INSTANCE_ID=$1
+        local -r INSTANCE_ID=$1
 
 
         ###
@@ -80,7 +80,7 @@ _aws_resources_ec2_helpers_module() {
 
         aws --profile $AWS_PROFILE ec2 wait instance-terminated \
             --region $AWS_REGION \
-            --instance-ids $INSTANCE_ID > /dev/null 2>&1
+            --instance-ids "$INSTANCE_ID" > /dev/null 2>&1
     }
 }
 

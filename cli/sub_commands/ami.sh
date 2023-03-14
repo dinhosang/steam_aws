@@ -46,19 +46,21 @@ _subcommands_ami_module() {
         ###
 
 
-        local ami_ids=($(get_active_ami_ids false))
+        local ami_ids
+
+        read -r -a ami_ids <<< "$(get_active_ami_ids false)"
 
 
         ###
 
 
-        if [ -z "$ami_ids" ]; then
+        if [ -z "${ami_ids[0]}" ]; then
 
             log_info "no additional AMIs found - skipping deletion"
 
         else
 
-            delete_ami ${ami_ids[*]}
+            delete_ami "${ami_ids[*]}"
 
         fi
 
@@ -77,19 +79,21 @@ _subcommands_ami_module() {
         ###
 
 
-        local ami_ids=($(get_active_ami_ids true))
+        local ami_ids
+
+        read -r -a ami_ids <<< "$(get_active_ami_ids true)"
 
 
         ###
 
 
-        if [ -z "$ami_ids" ]; then
+        if [ -z "${ami_ids[0]}" ]; then
 
             log_info "no ami found - skipping deletion"
 
         else
 
-            delete_ami ${ami_ids[*]}
+            delete_ami "${ami_ids[*]}"
 
         fi
 
@@ -108,7 +112,7 @@ _subcommands_ami_module() {
         ###
 
 
-        local latest_instance_id=$(get_running_instance_ids true)
+        local -r latest_instance_id=$(get_running_instance_ids true)
 
 
         ###
@@ -122,7 +126,7 @@ _subcommands_ami_module() {
 
             log_step "instance id - '$latest_instance_id'"
 
-            create_ami_via_aws_cli_and_instance_id $latest_instance_id
+            create_ami_via_aws_cli_and_instance_id "$latest_instance_id"
 
         fi
 

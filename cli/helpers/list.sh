@@ -11,10 +11,10 @@ _helpers_list_module() {
 
     is_in_list() {
 
-        local VALUE=$1
-        local LIST="${@:2}"
+        local -r VALUE=$1
+        local -r LIST="${*:2}"
 
-        if [[ ${LIST[*]} =~ (' '|^)$VALUE(' '|$) ]]; then
+        if [[ "$LIST" =~ (' '|^)$VALUE(' '|$) ]]; then
 
             return 0
 
@@ -23,21 +23,6 @@ _helpers_list_module() {
             return 1
 
         fi
-    }
-
-    get_flag_value_from_flags_list() {
-
-        local FLAG_SOUGHT=$1
-
-        for flag in "${USER_FLAGS[@]}"; do
-
-            if [[ $flag =~ (^$FLAG_SOUGHT=.*$) ]]; then
-
-                echo $flag | awk -F '=' '{print $NF}'
-
-            fi
-
-        done
     }
 }
 

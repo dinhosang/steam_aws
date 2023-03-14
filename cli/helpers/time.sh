@@ -10,8 +10,8 @@ _helpers_time_module() {
 
 
     get_timestamp(){
-    
-        echo "$(date +%Y%m%d%H%M%S)"
+
+        date +%Y%m%d%H%M%S
     }
 }
 

@@ -23,13 +23,15 @@ _cli_index_module() {
 
         local USER_SUB_COMMAND=$1
         
-        local USER_FLAGS=(${@:2})
+        local USER_FLAGS
+
+        read -r -a USER_FLAGS <<< "${@:2}"
 
 
         ###
 
 
-        if ! (is_in_list $USER_SUB_COMMAND "${AMI_SUB_COMMANDS[@]}"); then
+        if ! (is_in_list "$USER_SUB_COMMAND" "${AMI_SUB_COMMANDS[@]}"); then
 
             print_help_and_quit $AMI 1
 
@@ -39,7 +41,7 @@ _cli_index_module() {
         ###
 
 
-        if [ $HELP == $USER_SUB_COMMAND ]; then
+        if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
             print_help_and_quit $AMI 0
 
@@ -55,19 +57,19 @@ _cli_index_module() {
         ###
 
 
-        if [ $CREATE == $USER_SUB_COMMAND ]; then
+        if [ $CREATE == "$USER_SUB_COMMAND" ]; then
 
             create_ami
 
-        elif [ $DELETE == $USER_SUB_COMMAND ]; then
+        elif [ $DELETE == "$USER_SUB_COMMAND" ]; then
 
             delete_most_recent_ami
 
-        elif [ $UPDATE == $USER_SUB_COMMAND ]; then
+        elif [ $UPDATE == "$USER_SUB_COMMAND" ]; then
 
             create_ami_from_latest_instance
 
-        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+        elif [ $PRUNE == "$USER_SUB_COMMAND" ]; then
 
             delete_all_but_most_recent_ami
 
@@ -76,15 +78,17 @@ _cli_index_module() {
 
     handle_instance() {
 
-        local USER_SUB_COMMAND=$1
+        local -r USER_SUB_COMMAND=$1
         
-        local USER_FLAGS=(${@:2})
+        local USER_FLAGS
+
+        read -r -a USER_FLAGS <<< "${@:2}"
 
 
         ###
 
 
-        if ! (is_in_list $USER_SUB_COMMAND "${INSTANCE_SUB_COMMANDS[@]}"); then
+        if ! (is_in_list "$USER_SUB_COMMAND" "${INSTANCE_SUB_COMMANDS[@]}"); then
 
             print_help_and_quit $INSTANCE 1
 
@@ -94,7 +98,7 @@ _cli_index_module() {
         ###
 
 
-        if [ $HELP == $USER_SUB_COMMAND ]; then
+        if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
             print_help_and_quit $INSTANCE 0
 
@@ -110,15 +114,15 @@ _cli_index_module() {
         ###
 
 
-        if [ $CREATE == $USER_SUB_COMMAND ]; then
+        if [ $CREATE == "$USER_SUB_COMMAND" ]; then
 
             create_profile_sgs_instance
 
-        elif [ $DELETE == $USER_SUB_COMMAND ]; then
+        elif [ $DELETE == "$USER_SUB_COMMAND" ]; then
 
             delete_profile_sgs_instance
 
-        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+        elif [ $PRUNE == "$USER_SUB_COMMAND" ]; then
 
             delete_all_but_most_recent_instance
 
@@ -129,13 +133,15 @@ _cli_index_module() {
 
         local USER_SUB_COMMAND=$1
         
-        local USER_FLAGS=(${@:2})
+        local USER_FLAGS
+
+        read -r -a USER_FLAGS <<< "${@:2}"
 
 
         ###
 
 
-        if ! (is_in_list $USER_SUB_COMMAND "${SNAPSHOT_SUB_COMMANDS[@]}"); then
+        if ! (is_in_list "$USER_SUB_COMMAND" "${SNAPSHOT_SUB_COMMANDS[@]}"); then
 
             print_help_and_quit $SNAPSHOT 1
 
@@ -145,7 +151,7 @@ _cli_index_module() {
         ###
 
 
-        if [ $HELP == $USER_SUB_COMMAND ]; then
+        if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
             print_help_and_quit $SNAPSHOT 0
 
@@ -161,11 +167,11 @@ _cli_index_module() {
         ###
 
 
-        if [ $DELETE == $USER_SUB_COMMAND ]; then
+        if [ $DELETE == "$USER_SUB_COMMAND" ]; then
 
             delete_most_recent_snapshot
 
-        elif [ $PRUNE == $USER_SUB_COMMAND ]; then
+        elif [ $PRUNE == "$USER_SUB_COMMAND" ]; then
 
             delete_all_but_most_recent_snapshot
 

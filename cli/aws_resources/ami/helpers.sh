@@ -49,20 +49,20 @@ _aws_resources_ami_helpers_module() {
         ###
 
 
-        local ami_ids_array=$(aws --profile $AWS_PROFILE ec2 describe-images \
+        local -r ami_ids_array=$(aws --profile $AWS_PROFILE ec2 describe-images \
             --region $AWS_REGION \
             --owners self \
             --filters "Name=tag:$TAG_KEY_PURPOSE, Values=$AMI_SNAPSHOT_TAG_PURPOSE" \
             --query "reverse(sort_by(Images,&CreationDate))[$query_instance_array_indexes].[ImageId][]"
         )
 
-        local ami_ids=$(echo ${ami_ids_array} | jq -r '.? | join(" ")' )
+        local -r ami_ids=$(echo "${ami_ids_array}" | jq -r '.? | join(" ")' )
 
 
         ###
 
 
-        echo $ami_ids
+        echo "$ami_ids"
     }
 
     does_image_exist_throw_if_not() {
@@ -75,15 +75,15 @@ _aws_resources_ami_helpers_module() {
 
         fi
 
-        local IMAGE_ID=$1
+        local -r IMAGE_ID=$1
 
 
         ###
 
 
-        local result=$(aws --profile $AWS_PROFILE ec2 describe-images \
+        local -r result=$(aws --profile $AWS_PROFILE ec2 describe-images \
             --region $AWS_REGION \
-            --image-ids $IMAGE_ID \
+            --image-ids "$IMAGE_ID" \
             --query "Images[0]"
         )
 

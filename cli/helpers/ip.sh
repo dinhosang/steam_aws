@@ -11,7 +11,7 @@ _helpers_ip_module() {
 
     source ./cli/config/index.sh
 
-    source ./cli/helpers/index.sh
+    source ./cli/helpers/log.sh
 
 
     ###
@@ -27,15 +27,15 @@ _helpers_ip_module() {
 
         fi
         
-        local IP_URL=$1
+        local -r IP_URL=$1
 
 
         ###
 
 
-        local ip_raw="$(curl $IP_URL)"
+        local -r ip_raw=$(curl "$IP_URL")
 
-        local ip=$(echo $ip_raw | awk -F ',' '{print $2}')
+        local -r ip=$(echo "$ip_raw" | awk -F ',' '{print $2}')
 
 
         ###
@@ -53,7 +53,7 @@ _helpers_ip_module() {
         ###
 
 
-        echo $ip
+        echo "$ip"
     }
 
 
@@ -62,16 +62,16 @@ _helpers_ip_module() {
 
     get_ip_4() {
 
-        local ip=$(_get_ip $IP_4_QUERY_URL)
+        local -r ip=$(_get_ip $IP_4_QUERY_URL)
 
-        echo $ip
+        echo "$ip"
     }
 
     get_ip_6() {
 
-        local ip=$(_get_ip $IP_6_QUERY_URL)
+        local -r ip=$(_get_ip $IP_6_QUERY_URL)
 
-        echo $ip
+        echo "$ip"
     }
 }
 

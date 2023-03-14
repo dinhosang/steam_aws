@@ -69,19 +69,25 @@ _aws_resources_ami_module() {
         ###
 
 
-        local AMI_IDS=(${@})
+        local ami_ids_to_delete
+
+        read -r -a ami_ids_to_delete <<< "${*}"
+
+        log_info "amis to terminate: '[${ami_ids_to_delete[*]}]'"
 
 
         ###
 
 
-        for ami_id in ${AMI_IDS[*]}; do
+        for ami_id in "${ami_ids_to_delete[@]}"; do
 
             log_step "de-registering ami - '$ami_id'"
 
-            local _result=$(aws --profile $AWS_PROFILE ec2 deregister-image \
+            local _result
+
+            _result=$(aws --profile $AWS_PROFILE ec2 deregister-image \
                 --region $AWS_REGION \
-                --image-id $ami_id
+                --image-id "$ami_id"
             )
 
 
@@ -95,7 +101,7 @@ _aws_resources_ami_module() {
 
                 log_step "checking ami '$ami_id' was de-registered"
 
-                does_image_exist_throw_if_not $ami_id
+                does_image_exist_throw_if_not "$ami_id"
 
             } || {
                 
@@ -148,7 +154,7 @@ _aws_resources_ami_module() {
         ###
 
 
-        local INSTANCE_ID=$1
+        local -r INSTANCE_ID=$1
         
 
         ###
@@ -156,9 +162,9 @@ _aws_resources_ami_module() {
 
         log_step "creating AMI from '$INSTANCE_ID'"
             
-        local create_ami_details=$(aws --profile $AWS_PROFILE ec2 create-image \
+        local -r create_ami_details=$(aws --profile $AWS_PROFILE ec2 create-image \
             --region $AWS_REGION \
-            --instance-id $INSTANCE_ID \
+            --instance-id "$INSTANCE_ID" \
             --name "${AMI_NAME}_$(get_timestamp)" \
             --tag-specifications "ResourceType=image,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$AMI_SNAPSHOT_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]" "ResourceType=snapshot,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$AMI_SNAPSHOT_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]"
         )
@@ -167,29 +173,33 @@ _aws_resources_ami_module() {
         ###
 
 
-        local ami_id=$(echo $create_ami_details | jq -r '.ImageId')
+        local -r ami_id=$(echo "$create_ami_details" | jq -r '.ImageId')
 
         local ami_is_ready=false
 
+        local -r sleep_seconds=20
+
         while [ $ami_is_ready == false ]; do
 
-            local describe_ami_details=$(aws --profile $AWS_PROFILE ec2 describe-images \
+            local describe_ami_details
+
+            describe_ami_details=$(aws --profile $AWS_PROFILE ec2 describe-images \
                 --region $AWS_REGION \
-                --image-ids $ami_id \
+                --image-ids "$ami_id" \
                 --query "Images[0].State"
             )
 
-            local status_equals_available=$(echo $describe_ami_details | jq -r '. == "available"')
+            local status_equals_available
 
-            if [ $status_equals_available == true ]; then
+            status_equals_available=$(echo "$describe_ami_details" | jq -r '. == "available"')
+
+            if [ "$status_equals_available" == true ]; then
 
                 ami_is_ready=true
 
                 log_info "new ami is now available"
 
             else
-
-                local sleep_seconds=20
 
                 log_info  'new ami is not yet available'
 

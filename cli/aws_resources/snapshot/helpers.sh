@@ -47,19 +47,19 @@ _aws_resources_snapshot_helpers_module() {
         ###
 
 
-        local snapshot_ids_json_array=$(aws --profile $AWS_PROFILE ec2 describe-snapshots \
+        local -r snapshot_ids_json_array=$(aws --profile $AWS_PROFILE ec2 describe-snapshots \
             --region $AWS_REGION \
             --filters Name=tag:$TAG_KEY_PURPOSE,Values=$AMI_SNAPSHOT_TAG_PURPOSE  \
             --query "reverse(sort_by(Snapshots,&StartTime))[$query_instance_array_indexes].[SnapshotId][]"
         )
 
-        local snapshot_ids=$(echo ${snapshot_ids_json_array} | jq -r '.? | join(" ")' )
+        local -r snapshot_ids=$(echo "${snapshot_ids_json_array}" | jq -r '.? | join(" ")' )
 
 
         ###
 
 
-        echo $snapshot_ids
+        echo "$snapshot_ids"
     }
 
     does_snapshot_exist_throw_if_not() {
@@ -76,7 +76,7 @@ _aws_resources_snapshot_helpers_module() {
         ###
 
 
-        local SNAPSHOT_ID=$1
+        local -r SNAPSHOT_ID=$1
 
 
         ###
@@ -84,7 +84,7 @@ _aws_resources_snapshot_helpers_module() {
 
         aws --profile $AWS_PROFILE ec2 describe-snapshots \
             --region $AWS_REGION \
-            --snapshot-ids $SNAPSHOT_ID > /dev/null 2>&1
+            --snapshot-ids "$SNAPSHOT_ID" > /dev/null 2>&1
     }
 }
 

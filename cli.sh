@@ -9,9 +9,11 @@ source ./cli/index.sh
 
 main(){
 
-    local USER_COMMAND=$1
-    local USER_SUB_COMMAND=$2
-    local USER_FLAGS=(${@:3})
+    local -r USER_COMMAND=$1
+    local -r USER_SUB_COMMAND=$2
+
+    local USER_FLAGS
+    read -r -a USER_FLAGS <<< "${@:3}"
 
 
     ###
@@ -24,7 +26,7 @@ main(){
     fi
 
 
-    if ! (is_in_list $USER_COMMAND "${COMMANDS[@]}"); then
+    if ! (is_in_list "$USER_COMMAND" "${COMMANDS[@]}"); then
 
         print_help_and_quit $HELP 1
 
@@ -34,17 +36,17 @@ main(){
     ###
 
 
-    if [ $AMI == $USER_COMMAND ]; then
+    if [ $AMI == "$USER_COMMAND" ]; then
 
-        handle_ami $USER_SUB_COMMAND "${USER_FLAGS[@]}"
+        handle_ami "$USER_SUB_COMMAND" "${USER_FLAGS[@]}"
 
-    elif [ $INSTANCE == $USER_COMMAND ]; then
+    elif [ $INSTANCE == "$USER_COMMAND" ]; then
 
-        handle_instance $USER_SUB_COMMAND "${USER_FLAGS[@]}"
+        handle_instance "$USER_SUB_COMMAND" "${USER_FLAGS[@]}"
 
-    elif [ $SNAPSHOT == $USER_COMMAND ]; then
+    elif [ $SNAPSHOT == "$USER_COMMAND" ]; then
 
-        handle_snapshot $USER_SUB_COMMAND "${USER_FLAGS[@]}"
+        handle_snapshot "$USER_SUB_COMMAND" "${USER_FLAGS[@]}"
 
     else
 

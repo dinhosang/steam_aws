@@ -17,6 +17,7 @@ _tools_docker_cli_module() {
 
 
     source ./tools/common/_config.sh
+
     source ./tools/common/_helpers.sh
 
 
@@ -34,14 +35,14 @@ _tools_docker_cli_module() {
 
     run_steam_aws_runner() {
 
-        local cli_cmd="$@"
+        local cli_cmd="${*}"
 
 
         ###
 
 
         if [ -z "$cli_cmd" ]; then 
-                
+
             cli_cmd=help
 
         fi
@@ -50,11 +51,11 @@ _tools_docker_cli_module() {
         ###
 
 
-        local cli_dir=$(pwd)
+        local -r cli_dir=$(pwd)
 
-        local aws_config_dir=~/.aws
+        local -r aws_config_dir=~/.aws
 
-        local container_aws_config_dir=/home/$STEAM_AWS_RUNNER_CONTAINER_USER/.aws
+        local -r container_aws_config_dir=/home/$STEAM_AWS_RUNNER_CONTAINER_USER/.aws
 
 
         ###
@@ -63,9 +64,9 @@ _tools_docker_cli_module() {
         docker run \
             --network host \
             --rm \
-            -v $cli_dir:/home/${STEAM_AWS_RUNNER_CONTAINER_USER}/src \
+            -v "$cli_dir":/home/${STEAM_AWS_RUNNER_CONTAINER_USER}/src \
             -v $aws_config_dir:$container_aws_config_dir \
-            $STEAM_AWS_RUNNER_IMAGE $cli_cmd
+            $STEAM_AWS_RUNNER_IMAGE ${cli_cmd}
     }
 
 
@@ -74,10 +75,7 @@ _tools_docker_cli_module() {
 
     steam_aws_docker_cli_main() {
 
-        local BUILD='build'
-        local RUN='run'
-
-        local ACCEPTED_ACTIONS=($BUILD $RUN)
+        local -r DOCKER_CLI_ACCEPTED_ACTIONS=("$BUILD" "$RUN")
 
 
         ###
@@ -85,21 +83,21 @@ _tools_docker_cli_module() {
 
         if [ -z ${1+x} ]; then
 
-            echo "please enter one of: [${ACCEPTED_ACTIONS[@]}]"
+            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_ACTIONS[*]}]"
 
             exit 1
 
         fi
 
-        local STEAM_AWS_CLI_BUILD_SCRIPT_ACTION=$1
+        local -r STEAM_AWS_CLI_BUILD_SCRIPT_ACTION=$1
 
 
         ###
 
 
-        if ! (_is_in_list $STEAM_AWS_CLI_BUILD_SCRIPT_ACTION "${ACCEPTED_ACTIONS[@]}"); then
+        if ! (_is_in_list "$STEAM_AWS_CLI_BUILD_SCRIPT_ACTION" "${DOCKER_CLI_ACCEPTED_ACTIONS[@]}"); then
 
-            echo "please enter one of: [${ACCEPTED_ACTIONS[@]}]"
+            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_ACTIONS[*]}]"
 
             exit 1
 
@@ -109,15 +107,17 @@ _tools_docker_cli_module() {
         ###
 
 
-        if [ $STEAM_AWS_CLI_BUILD_SCRIPT_ACTION == $BUILD ]; then
+        if [ $BUILD == "$STEAM_AWS_CLI_BUILD_SCRIPT_ACTION" ]; then
 
             build_steam_aws_runner_image
 
         else
 
-            local RUNNER_CMDS="${@:2}"
+            local RUNNER_CMDS
 
-            run_steam_aws_runner $RUNNER_CMDS
+            read -r -a RUNNER_CMDS <<< "${@:2}"
+
+            run_steam_aws_runner "${RUNNER_CMDS[@]}"
 
         fi
     }

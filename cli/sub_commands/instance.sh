@@ -58,19 +58,21 @@ _subcommands_instance_module() {
         ###
 
 
-        local instance_ids=($(get_running_instance_ids false))
+        local instance_ids
+
+        read -r -a instance_ids <<< "$(get_running_instance_ids false)"
 
 
         ###
 
 
-        if [ -z "$instance_ids" ]; then
+        if [ -z "${instance_ids[0]}" ]; then
 
             log_info "no additional instances found running - skipping deletion"
 
         else
 
-            delete_ec2 ${instance_ids[*]}
+            delete_ec2 "${instance_ids[*]}"
 
         fi
 
@@ -83,25 +85,27 @@ _subcommands_instance_module() {
 
     delete_profile_sgs_instance(){
 
-        log_start "deleting most recent instance, sgs, and profile"
+        log_start "deleting most recent instance, and the sgs / instance profile"
 
 
         ###
 
 
-        local instance_id=($(get_running_instance_ids true))
+        local instance_id
+
+        read -r -a instance_id <<< "$(get_running_instance_ids true)"
 
 
         ###
 
 
-        if [ -z "$instance_id" ]; then
+        if [ -z "${instance_id[0]}" ]; then
 
             log_info "no instances found running - skipping deletion"
 
         else
 
-            delete_ec2 ${instance_id[*]}
+            delete_ec2 "${instance_id[*]}"
 
         fi
 
@@ -122,7 +126,7 @@ _subcommands_instance_module() {
         ###
 
 
-        log_finish "deleting most recent instance, sgs, and profile"
+        log_finish "deleting most recent instance, and the sgs / instance profile"
     }
 }
 

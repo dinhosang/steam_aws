@@ -28,19 +28,21 @@ _subcommands_snapshot_module() {
         ####
 
 
-        local snapshot_ids=($(get_volume_snapshot_ids false))
+        local snapshot_ids
+
+        read -r -a snapshot_ids <<< "$(get_volume_snapshot_ids false)"
 
 
         ###
 
 
-        if [ -z "$snapshot_ids" ]; then
+        if [ -z "${snapshot_ids[0]}" ]; then
 
             log_info "no additional snapshots found - skipping deletion"
 
         else
 
-            delete_snapshot ${snapshot_ids[*]}
+            delete_snapshot "${snapshot_ids[*]}"
 
         fi
 
@@ -59,19 +61,21 @@ _subcommands_snapshot_module() {
         ###
 
 
-        local snapshot_ids=($(get_volume_snapshot_ids true))
+        local snapshot_ids
+
+        read -r -a snapshot_ids <<< "$(get_volume_snapshot_ids true)"
 
 
         ###
 
 
-        if [ -z "$snapshot_ids" ]; then
+        if [ -z "${snapshot_ids[0]}" ]; then
 
             log_info "no snapshot found - skipping deletion"
 
         else
 
-            delete_snapshot ${snapshot_ids[*]}
+            delete_snapshot "${snapshot_ids[*]}"
 
         fi
 

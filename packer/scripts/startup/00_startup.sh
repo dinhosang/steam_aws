@@ -29,8 +29,6 @@ mkdir $STARTUP_DIR
 
 echo "STEP: creating startup controller script"
 
-echo "startupdir - $STARTUP_DIR"
-
 touch $STARTUP_SCRIPT_CONTROL_PATH
 
 

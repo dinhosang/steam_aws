@@ -11,7 +11,27 @@ _helpers_flags_module() {
 
     source ./cli/config/index.sh
 
-    source ./cli/helpers/index.sh
+    source ./cli/helpers/log.sh
+    source ./cli/helpers/print_help.sh
+
+
+    ###
+
+
+    get_flag_value_from_flags_list() {
+
+        local -r FLAG_SOUGHT=$1
+
+        for flag in "${USER_FLAGS[@]}"; do
+
+            if [[ $flag =~ (^$FLAG_SOUGHT=.*$) ]]; then
+
+                echo "$flag" | awk -F '=' '{print $NF}'
+
+            fi
+
+        done
+    }
 
 
     ###
@@ -27,7 +47,7 @@ _helpers_flags_module() {
 
         if is_in_list "$PROFILE_FLAG=.*" "${USER_FLAGS[@]}"; then
 
-            local profile_name=$(get_flag_value_from_flags_list $PROFILE_FLAG)
+            profile_name=$(get_flag_value_from_flags_list $PROFILE_FLAG)
 
         fi
 
@@ -41,7 +61,7 @@ _helpers_flags_module() {
         ###
 
 
-        if [ -z $AWS_PROFILE ]; then 
+        if [ -z "$AWS_PROFILE" ]; then
 
             log_error "no AWS_PROFILE provided - please use cli/config/secrets.sh or pass in a profile via the -p flag"
 
@@ -64,7 +84,7 @@ _helpers_flags_module() {
 
         if is_in_list "$REGION_FLAG=.*" "${USER_FLAGS[@]}"; then
 
-            local region=$(get_flag_value_from_flags_list $REGION_FLAG)
+            region=$(get_flag_value_from_flags_list $REGION_FLAG)
 
         fi
 
@@ -78,7 +98,7 @@ _helpers_flags_module() {
         ###
 
 
-        if [ -z $AWS_REGION ]; then
+        if [ -z "$AWS_REGION" ]; then
 
             log_error "no AWS_REGION provided - please use cli/config/secrets.sh or pass in a region via the -r flag"
 

@@ -54,12 +54,12 @@ _aws_resources_instance_profile_module() {
 
             log_step "creating instance profile '$INSTANCE_PROFILE_NAME'"
 
-            local _result=$(aws --profile $AWS_PROFILE iam create-instance-profile \
+            local -r _result_create=$(aws --profile $AWS_PROFILE iam create-instance-profile \
                 --region $AWS_REGION \
                 --instance-profile-name $INSTANCE_PROFILE_NAME
             )
 
-            local _result=$(aws --profile $AWS_PROFILE iam wait instance-profile-exists \
+            local -r _result_exists=$(aws --profile $AWS_PROFILE iam wait instance-profile-exists \
                 --region $AWS_REGION \
                 --instance-profile-name $INSTANCE_PROFILE_NAME
             )
@@ -106,7 +106,7 @@ _aws_resources_instance_profile_module() {
 
             log_step "deleting instance profile '$INSTANCE_PROFILE_NAME'"
 
-            local _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
+            local -r _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
                 --region $AWS_REGION \
                 --instance-profile-name $INSTANCE_PROFILE_NAME
             )
