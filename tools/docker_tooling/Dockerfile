@@ -16,6 +16,8 @@ RUN apk add bash
 
 RUN apk add shellcheck
 
+RUN apk add shfmt
+
 
 ###
 
