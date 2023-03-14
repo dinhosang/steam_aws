@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ##
 #   PURPOSE:
 #       -   currently the instance does not present any audio
@@ -12,29 +11,22 @@
 #
 ##
 
-
 # shellcheck source=packer/scripts/startup/helpers/index.sh
 source /tmp/startup_helpers.sh # NOTE: location of file on packer build instance
 
-
 ###
-
 
 create_startup_audio() {
 
     local FILE_NAME=02_audio.sh
 
     local SCRIPT_DESTINATION_PATH=$STARTUP_DIR/${FILE_NAME}
- 
-    
-    ###
 
+    ###
 
     create_startup_script_on_instance "$FILE_NAME" "$SCRIPT_DESTINATION_PATH"
 
-
     ###
-
 
     local -r PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH=/tmp/02_audio.txt
 
@@ -44,9 +36,7 @@ create_startup_audio() {
         "$PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH" \
         "$SCRIPT_DESTINATION_PATH"
 
-
     ###
-
 
     update_controller_script_to_run_startup_script_on_instance \
         "$FILE_NAME" \
@@ -54,21 +44,15 @@ create_startup_audio() {
         "$STARTUP_COMPLETED_SCRIPT_PATH" \
         "$STARTUP_SCRIPT_CONTROL_PATH"
 
-
     ###
-    
 
     make_startup_script_executable_on_instance "$FILE_NAME" "$SCRIPT_DESTINATION_PATH"
 }
 
-
 ###
-
 
 echo "START: creating startup script to fix audio issues for pulseaudio"
 
-
 create_startup_audio
-
 
 echo "FINISH: creating startup script to fix audio issues for pulseaudio"

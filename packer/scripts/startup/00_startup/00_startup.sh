@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ##
 #   PURPOSE:
 #       -   not everything can be setup as part of the packer build
@@ -12,18 +11,14 @@
 #
 ##
 
-
 # shellcheck source=packer/scripts/startup/helpers/index.sh
 source /tmp/startup_helpers.sh # NOTE: location of file on packer build instance
 
-
 ###
-
 
 create_startup() {
 
     local -r FILE_NAME=00_startup.sh
-
 
     ###
 
@@ -31,9 +26,7 @@ create_startup() {
 
     mkdir "$STARTUP_DIR"
 
-
     ###
-
 
     echo "STEP: creating startup controller script"
 
@@ -41,18 +34,14 @@ create_startup() {
         "$FILE_NAME" \
         "$STARTUP_SCRIPT_CONTROL_PATH"
 
-
     ###
-
 
     echo "STEP: creating startup completion record file"
 
     touch "$STARTUP_COMPLETED_SCRIPT_PATH"
 
-
     ###
 
-    
     local -r PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH=/tmp/00_startup.txt
 
     echo "STEP: writing starting contents of controller script"
@@ -61,22 +50,16 @@ create_startup() {
         "$PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH" \
         "$STARTUP_SCRIPT_CONTROL_PATH"
 
-
     ###
-
 
     make_startup_script_executable_on_instance "$FILE_NAME" "$STARTUP_SCRIPT_CONTROL_PATH"
 
 }
 
-
 ###
-
 
 echo "START: handling startup setup"
 
-
 create_startup
-
 
 echo "FINISH: handling startup setup"

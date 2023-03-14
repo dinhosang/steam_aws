@@ -1,17 +1,14 @@
 #!/bin/bash
 
-
 ##
 #   NOTE:
 #       -   all commands must be run at the root of steam_aws directory
 #
 ##
 
-
 source ./tools/common/_config.sh
 
 source ./tools/common/_helpers.sh
-
 
 ###
 
@@ -19,18 +16,14 @@ _tools_docker_tooling_module() {
 
     export TOOLS_DOCKER_TOOLING_EXPORTED=true
 
-
     ###
-
 
     build_tooling_image() {
 
         docker build -t $STEAM_AWS_TOOLING_IMAGE -f ./tools/docker_tooling/Dockerfile .
     }
 
-
     ###
-
 
     run_shellcheck_tooling() {
 
@@ -77,9 +70,7 @@ _tools_docker_tooling_module() {
 
         fi
 
-
         ###
-
 
         if ! (_is_in_list "$SUB_COMMAND" "${ACCEPTED_SUB_COMMANDS[@]}"); then
 
@@ -89,9 +80,7 @@ _tools_docker_tooling_module() {
 
         fi
 
-
         ###
-
 
         if [ $LINT == "$SUB_COMMAND" ]; then
 

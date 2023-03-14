@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ##
 #   PURPOSE:
 #       -   user account (like 'ubuntu') does not start with login password
@@ -10,13 +9,10 @@
 #
 ##
 
-
 # shellcheck source=packer/scripts/startup/helpers/index.sh
 source /tmp/startup_helpers.sh # NOTE: location of file on packer build instance
 
-
 ###
-
 
 create_startup_account() {
 
@@ -24,15 +20,11 @@ create_startup_account() {
 
     local -r SCRIPT_DESTINATION_PATH="${STARTUP_DIR}/${FILE_NAME}"
 
-
     ###
-
 
     create_startup_script_on_instance "$FILE_NAME" "$SCRIPT_DESTINATION_PATH"
 
-
     ###
-
 
     local -r PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH=/tmp/01_account.txt
 
@@ -42,9 +34,7 @@ create_startup_account() {
         "$PACKER_BUILD_SCRIPT_TEXT_SOURCE_PATH" \
         "$SCRIPT_DESTINATION_PATH"
 
-
     ###
-
 
     update_controller_script_to_run_startup_script_on_instance \
         "$FILE_NAME" \
@@ -52,21 +42,15 @@ create_startup_account() {
         "$STARTUP_COMPLETED_SCRIPT_PATH" \
         "$STARTUP_SCRIPT_CONTROL_PATH"
 
-
     ###
-
 
     make_startup_script_executable_on_instance "$FILE_NAME" "$SCRIPT_DESTINATION_PATH"
 }
 
-
 ###
-
 
 echo "START: creating startup script to set password for RDP login account"
 
-
 create_startup_account
-
 
 echo "FINISH: creating startup script to set password for RDP login account"

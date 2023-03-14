@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 _tools_helpers_module() {
 
     export TOOLS_HELPERS_MODULE_EXPORTED=true
@@ -22,11 +21,9 @@ _tools_helpers_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $TOOLS_HELPERS_MODULE_EXPORTED ]; then 
+if [ -z $TOOLS_HELPERS_MODULE_EXPORTED ]; then
 
     _tools_helpers_module
 

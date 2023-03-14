@@ -1,10 +1,8 @@
 #!/bin/bash
 
-
 ##
 #   GUI - INSTALL
 ##
-
 
 echo "START: mate gui install"
 

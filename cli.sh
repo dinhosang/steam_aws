@@ -1,30 +1,24 @@
 #!/bin/bash
 
-
 source ./cli/index.sh
-
 
 ###
 
-
-main(){
+main() {
 
     local -r USER_COMMAND=$1
     local -r USER_SUB_COMMAND=$2
 
     local USER_FLAGS
-    read -r -a USER_FLAGS <<< "${@:3}"
-
+    read -r -a USER_FLAGS <<<"${@:3}"
 
     ###
 
+    if [ -z ${1+x} ]; then
 
-    if [ -z ${1+x} ]; then 
-        
         print_help_and_quit $HELP 1
 
     fi
-
 
     if ! (is_in_list "$USER_COMMAND" "${COMMANDS[@]}"); then
 
@@ -32,9 +26,7 @@ main(){
 
     fi
 
-
     ###
-
 
     if [ $AMI == "$USER_COMMAND" ]; then
 
@@ -55,14 +47,10 @@ main(){
     fi
 }
 
-
 ###
-
 
 echo -e '\n'
 
-
 ###
-
 
 main "$@"

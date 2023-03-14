@@ -1,13 +1,10 @@
 #!/bin/bash
 
-
 _helpers_print_help_module() {
-    
+
     export HELPERS_PRINT_HELP_MODULE_IMPORTED=true
 
-
     ###
-
 
     _print_text() {
 
@@ -15,7 +12,6 @@ _helpers_print_help_module() {
     }
 
     ###
-
 
     _print_help() {
 
@@ -228,7 +224,7 @@ _helpers_print_help_module() {
     print_help_and_quit() {
 
         if [ "$1" == "$INSTANCE" ]; then
-            
+
             _print_help_instance
 
         elif [ "$1" == "$AMI" ]; then
@@ -249,11 +245,9 @@ _helpers_print_help_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $HELPERS_PRINT_HELP_MODULE_IMPORTED ]; then 
+if [ -z $HELPERS_PRINT_HELP_MODULE_IMPORTED ]; then
 
     _helpers_print_help_module
 

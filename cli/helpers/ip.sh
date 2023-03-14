@@ -1,45 +1,36 @@
 #!/bin/bash
 
-
 _helpers_ip_module() {
-    
+
     export HELPERS_IP_MODULE_IMPORTED=true
 
-
     ###
-
 
     source ./cli/config/index.sh
 
     source ./cli/helpers/log.sh
 
-
     ###
 
+    _get_ip() {
 
-    _get_ip(){
+        if [ -z ${1+x} ]; then
 
-        if [ -z ${1+x} ]; then 
-            
             log_error 'IP_URL not found - Must be passed in as first argument to function.'
 
             exit 1
 
         fi
-        
+
         local -r IP_URL=$1
 
-
         ###
-
 
         local -r ip_raw=$(curl "$IP_URL")
 
         local -r ip=$(echo "$ip_raw" | awk -F ',' '{print $2}')
 
-
         ###
-
 
         if [ -z "$ip" ]; then
 
@@ -48,17 +39,13 @@ _helpers_ip_module() {
             exit 1
 
         fi
-        
 
         ###
-
 
         echo "$ip"
     }
 
-
     ###
-
 
     get_ip_4() {
 
@@ -75,11 +62,9 @@ _helpers_ip_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $HELPERS_IP_MODULE_IMPORTED ]; then 
+if [ -z $HELPERS_IP_MODULE_IMPORTED ]; then
 
     _helpers_ip_module
 

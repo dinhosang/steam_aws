@@ -1,10 +1,8 @@
 #!/bin/bash
 
-
 ##
 #  STEAM - INSTALL
 ##
-
 
 echo "START: steam install"
 

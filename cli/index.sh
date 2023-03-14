@@ -1,13 +1,10 @@
 #!/bin/bash
 
-
 _cli_index_module() {
 
     export CLI_INDEX_MODULE_IMPORTED=true
 
-
     ###
-
 
     source ./cli/config/index.sh
 
@@ -15,21 +12,17 @@ _cli_index_module() {
 
     source ./cli/sub_commands/index.sh
 
-
     ###
-
 
     handle_ami() {
 
         local USER_SUB_COMMAND=$1
-        
+
         local USER_FLAGS
 
-        read -r -a USER_FLAGS <<< "${@:2}"
-
+        read -r -a USER_FLAGS <<<"${@:2}"
 
         ###
-
 
         if ! (is_in_list "$USER_SUB_COMMAND" "${AMI_SUB_COMMANDS[@]}"); then
 
@@ -37,9 +30,7 @@ _cli_index_module() {
 
         fi
 
-
         ###
-
 
         if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
@@ -47,15 +38,11 @@ _cli_index_module() {
 
         fi
 
-
         ###
-
 
         handle_flags
 
-
         ###
-
 
         if [ $CREATE == "$USER_SUB_COMMAND" ]; then
 
@@ -79,24 +66,20 @@ _cli_index_module() {
     handle_instance() {
 
         local -r USER_SUB_COMMAND=$1
-        
+
         local USER_FLAGS
 
-        read -r -a USER_FLAGS <<< "${@:2}"
-
+        read -r -a USER_FLAGS <<<"${@:2}"
 
         ###
-
 
         if ! (is_in_list "$USER_SUB_COMMAND" "${INSTANCE_SUB_COMMANDS[@]}"); then
 
             print_help_and_quit $INSTANCE 1
 
         fi
-        
 
         ###
-
 
         if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
@@ -104,15 +87,11 @@ _cli_index_module() {
 
         fi
 
-
         ###
-
 
         handle_flags
 
-
         ###
-
 
         if [ $CREATE == "$USER_SUB_COMMAND" ]; then
 
@@ -132,14 +111,12 @@ _cli_index_module() {
     handle_snapshot() {
 
         local USER_SUB_COMMAND=$1
-        
+
         local USER_FLAGS
 
-        read -r -a USER_FLAGS <<< "${@:2}"
-
+        read -r -a USER_FLAGS <<<"${@:2}"
 
         ###
-
 
         if ! (is_in_list "$USER_SUB_COMMAND" "${SNAPSHOT_SUB_COMMANDS[@]}"); then
 
@@ -147,9 +124,7 @@ _cli_index_module() {
 
         fi
 
-
         ###
-
 
         if [ $HELP == "$USER_SUB_COMMAND" ]; then
 
@@ -157,15 +132,11 @@ _cli_index_module() {
 
         fi
 
-
         ###
-
 
         handle_flags
 
-
         ###
-
 
         if [ $DELETE == "$USER_SUB_COMMAND" ]; then
 
@@ -179,11 +150,9 @@ _cli_index_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $CLI_INDEX_MODULE_IMPORTED ]; then 
+if [ -z $CLI_INDEX_MODULE_IMPORTED ]; then
 
     _cli_index_module
 

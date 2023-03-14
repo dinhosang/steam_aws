@@ -1,30 +1,23 @@
 #!/bin/bash
 
-
 _aws_resources_instance_profile_module() {
-    
+
     export AWS_RESOURCES_INSTANCE_PROFILE_MODULE_IMPORTED=true
 
-
     ###
-
 
     source ./cli/config/index.sh
 
     source ./cli/helpers/index.sh
     source ./cli/aws_resources/instance_profile/helpers.sh
 
-
     ###
 
-
-    create_instance_profile(){
+    create_instance_profile() {
 
         log_start "create instance profile"
 
-
         ###
-
 
         local profile_exists=true
 
@@ -36,15 +29,13 @@ _aws_resources_instance_profile_module() {
             does_profile_exist_throw_if_not
 
         } || {
-            
+
             # catch
 
             profile_exists=false
         }
 
-
         ###
-
 
         if [ $profile_exists == true ]; then
 
@@ -54,32 +45,30 @@ _aws_resources_instance_profile_module() {
 
             log_step "creating instance profile '$INSTANCE_PROFILE_NAME'"
 
-            local -r _result_create=$(aws --profile $AWS_PROFILE iam create-instance-profile \
-                --region $AWS_REGION \
-                --instance-profile-name $INSTANCE_PROFILE_NAME
+            local -r _result_create=$(
+                aws --profile $AWS_PROFILE iam create-instance-profile \
+                    --region $AWS_REGION \
+                    --instance-profile-name $INSTANCE_PROFILE_NAME
             )
 
-            local -r _result_exists=$(aws --profile $AWS_PROFILE iam wait instance-profile-exists \
-                --region $AWS_REGION \
-                --instance-profile-name $INSTANCE_PROFILE_NAME
+            local -r _result_exists=$(
+                aws --profile $AWS_PROFILE iam wait instance-profile-exists \
+                    --region $AWS_REGION \
+                    --instance-profile-name $INSTANCE_PROFILE_NAME
             )
 
         fi
 
-
         ###
-
 
         log_finish "create instance profile"
     }
 
-    delete_instance_profile(){
+    delete_instance_profile() {
 
         log_start "delete instance profile"
 
-
         ###
-
 
         local profile_exists=true
 
@@ -91,24 +80,23 @@ _aws_resources_instance_profile_module() {
             does_profile_exist_throw_if_not
 
         } || {
-            
+
             # catch
 
             profile_exists=false
-            
+
         }
 
-
         ###
-
 
         if [ $profile_exists == true ]; then
 
             log_step "deleting instance profile '$INSTANCE_PROFILE_NAME'"
 
-            local -r _result=$(aws --profile $AWS_PROFILE iam delete-instance-profile \
-                --region $AWS_REGION \
-                --instance-profile-name $INSTANCE_PROFILE_NAME
+            local -r _result=$(
+                aws --profile $AWS_PROFILE iam delete-instance-profile \
+                    --region $AWS_REGION \
+                    --instance-profile-name $INSTANCE_PROFILE_NAME
             )
 
             log_step "instance profile '$INSTANCE_PROFILE_NAME' deleted"
@@ -119,19 +107,15 @@ _aws_resources_instance_profile_module() {
 
         fi
 
-
         ###
-
 
         log_finish "delete instance profile"
     }
 }
 
-
 ###
 
-
-if [ -z $AWS_RESOURCES_INSTANCE_PROFILE_MODULE_IMPORTED ]; then 
+if [ -z $AWS_RESOURCES_INSTANCE_PROFILE_MODULE_IMPORTED ]; then
 
     _aws_resources_instance_profile_module
 

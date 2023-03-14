@@ -1,22 +1,17 @@
 #!/bin/bash
 
-
 _helpers_log_module() {
 
     export HELPERS_LOG_MODULE_IMPORTED=true
 
-
     ###
-
 
     source ./cli/config/index.sh
 
-
     ###
 
-
     _log() {
-        
+
         local -r LINE_COLOUR=$1
 
         local -r TEXT=$2
@@ -24,9 +19,7 @@ _helpers_log_module() {
         echo -e "${LINE_COLOUR}${TEXT}${ANSI_CLEAR}"
     }
 
-
     ###
-
 
     log_error() {
 
@@ -71,11 +64,9 @@ _helpers_log_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $HELPERS_LOG_MODULE_IMPORTED ]; then 
+if [ -z $HELPERS_LOG_MODULE_IMPORTED ]; then
 
     _helpers_log_module
 

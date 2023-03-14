@@ -1,13 +1,10 @@
 #!/bin/bash
 
-
 _helpers_list_module() {
 
     export HELPERS_LIST_MODULE_IMPORTED=true
 
-
     ###
-
 
     is_in_list() {
 
@@ -26,11 +23,9 @@ _helpers_list_module() {
     }
 }
 
-
 ###
 
-
-if [ -z $HELPERS_LIST_MODULE_IMPORTED ]; then 
+if [ -z $HELPERS_LIST_MODULE_IMPORTED ]; then
 
     _helpers_list_module
 

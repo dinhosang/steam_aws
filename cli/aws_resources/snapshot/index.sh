@@ -1,70 +1,56 @@
 #!/bin/bash
 
-
 _aws_resources_snapshot_module() {
 
     export AWS_RESOURCES_SNAPSHOT_MODULE_IMPORTED=true
 
-
     ###
-
 
     source ./cli/config/index.sh
-    
-    source ./cli/helpers/index.sh
 
+    source ./cli/helpers/index.sh
 
     ###
 
-
     delete_snapshot() {
-        
-        log_start "delete snapshot"
 
+        log_start "delete snapshot"
 
         ###
 
+        if [ -z ${1+x} ]; then
 
-        if [ -z ${1+x} ]; then 
-            
             log_error "at least one snapshot id must be passed to 'delete_snapshot()'"
 
             exit 1
 
         fi
 
-
         ###
-
 
         local snapshot_ids_to_delete
 
-        read -r -a snapshot_ids_to_delete <<< "${*}"
+        read -r -a snapshot_ids_to_delete <<<"${*}"
 
         log_info "snapshots to terminate: '[${snapshot_ids_to_delete[*]}]'"
 
-
         ###
-
 
         for snapshot_id in "${snapshot_ids_to_delete[@]}"; do
 
             log_step "deleting volume snapshot - '$snapshot_id'"
 
-            
             ###
-
 
             local _result
 
-            _result=$(aws --profile $AWS_PROFILE ec2 delete-snapshot \
-                --region $AWS_REGION \
-                --snapshot-id "$snapshot_id"
+            _result=$(
+                aws --profile $AWS_PROFILE ec2 delete-snapshot \
+                    --region $AWS_REGION \
+                    --snapshot-id "$snapshot_id"
             )
 
-
             ###
-
 
             local snapshot_deleted=false
 
@@ -74,7 +60,7 @@ _aws_resources_snapshot_module() {
                 does_snapshot_exist_throw_if_not "$snapshot_id"
 
             } || {
-                
+
                 # catch
 
                 snapshot_deleted=true
@@ -93,19 +79,15 @@ _aws_resources_snapshot_module() {
 
         done
 
-
         ###
-
 
         log_finish "delete snapshot"
     }
 }
 
-
 ###
 
-
-if [ -z $AWS_RESOURCES_SNAPSHOT_MODULE_IMPORTED ]; then 
+if [ -z $AWS_RESOURCES_SNAPSHOT_MODULE_IMPORTED ]; then
 
     _aws_resources_snapshot_module
 

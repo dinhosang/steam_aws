@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 source ./cli/helpers/flags.sh
 source ./cli/helpers/ip.sh
 source ./cli/helpers/list.sh
