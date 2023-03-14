@@ -1,3 +1,9 @@
+## 0.4.0 (2023-03-14)
+
+### Feat
+
+- **cli-flags**: added region flag override
+
 ## 0.3.2 (2023-03-14)
 
 ### Fix
