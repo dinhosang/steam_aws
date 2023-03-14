@@ -1,3 +1,9 @@
+## 0.6.0 (2023-03-14)
+
+### Feat
+
+- **docker**: added container functionality
+
 ## 0.5.0 (2023-03-14)
 
 ### Feat
