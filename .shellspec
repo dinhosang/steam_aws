@@ -1,0 +1,19 @@
+--require spec_helper
+
+###
+
+-s bash
+--default-path "."
+--sandbox
+
+###
+
+--fail-no-examples
+--fail-low-coverage
+
+###
+
+--kcov
+--kcov-options "--clean"
+--kcov-options "--limits=7,80"
+--kcov-options "--exclude-pattern=/.shellspec,/spec/,/coverage/,/report/"

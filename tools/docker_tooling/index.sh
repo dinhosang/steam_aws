@@ -6,8 +6,7 @@
 #
 ##
 
-source ./tools/common/_config.sh
-
+source ./tools/docker_tooling/_config.sh
 source ./tools/common/_helpers.sh
 
 ###
@@ -48,7 +47,7 @@ _tools_docker_tooling_module() {
             --rm \
             -v "$cli_dir":/src \
             -t \
-            $STEAM_AWS_TOOLING_IMAGE "shfmt -d -i 4 ."
+            $STEAM_AWS_TOOLING_IMAGE "shfmt -d ."
     }
 
     run_fmt_fix_tooling() {
@@ -59,7 +58,32 @@ _tools_docker_tooling_module() {
             --rm \
             -v "$cli_dir":/src \
             -t \
-            $STEAM_AWS_TOOLING_IMAGE "shfmt -w -i 4 ."
+            $STEAM_AWS_TOOLING_IMAGE "shfmt -w ."
+    }
+
+    run_test_shellspec_tooling() {
+
+        local -r cli_dir=$(pwd)
+
+        local -r docker_overrides="${1:-}"
+
+        local -r shellspec_overrides=("${@:2}")
+
+        # shellcheck disable=SC2086
+        docker run \
+            --rm \
+            -v "$cli_dir":/src \
+            -t \
+            ${docker_overrides} \
+            $STEAM_AWS_TOOLING_IMAGE "shellspec ${shellspec_overrides[*]:-}"
+    }
+
+    run_test_ci_shellspec_tooling() {
+        run_test_shellspec_tooling '-u=root'
+    }
+
+    run_test_no_cov_shellspec_tooling() {
+        run_test_shellspec_tooling "" "--no-kcov"
     }
 
     run_controller() {
@@ -68,7 +92,7 @@ _tools_docker_tooling_module() {
 
         if [ -z "$SUB_COMMAND" ]; then
 
-            echo "ERROR: please pass in one of the following sub commands: [${ACCEPTED_SUB_COMMANDS[*]}]"
+            echo "ERROR: please pass in one of the following sub commands: [${DOCKER_TOOLING_ACCEPTED_SUB_COMMANDS[*]}]"
 
             exit 1
 
@@ -76,9 +100,9 @@ _tools_docker_tooling_module() {
 
         ###
 
-        if ! (_is_in_list "$SUB_COMMAND" "${ACCEPTED_SUB_COMMANDS[@]}"); then
+        if ! (_is_in_list "$SUB_COMMAND" "${DOCKER_TOOLING_ACCEPTED_SUB_COMMANDS[@]}"); then
 
-            echo "please enter one of: [${ACCEPTED_SUB_COMMANDS[*]}]"
+            echo "please enter one of: [${DOCKER_TOOLING_ACCEPTED_SUB_COMMANDS[*]}]"
 
             exit 1
 
@@ -86,7 +110,19 @@ _tools_docker_tooling_module() {
 
         ###
 
-        if [ $LINT == "$SUB_COMMAND" ]; then
+        if [ $TEST == "$SUB_COMMAND" ]; then
+
+            run_test_shellspec_tooling
+
+        elif [ $TEST_CI == "$SUB_COMMAND" ]; then
+
+            run_test_ci_shellspec_tooling
+
+        elif [ $TEST_NO_COV == "$SUB_COMMAND" ]; then
+
+            run_test_no_cov_shellspec_tooling
+
+        elif [ $LINT == "$SUB_COMMAND" ]; then
 
             run_lint_shellcheck_tooling
 
@@ -109,7 +145,7 @@ _tools_docker_tooling_module() {
 
         if [ -z "$COMMAND" ]; then
 
-            echo "please enter one of: [${ACCEPTED_COMMANDS[*]}]"
+            echo "please enter one of: [${DOCKER_TOOLING_ACCEPTED_COMMANDS[*]}]"
 
             exit 1
 
@@ -117,9 +153,9 @@ _tools_docker_tooling_module() {
 
         ###
 
-        if ! (_is_in_list "$COMMAND" "${ACCEPTED_COMMANDS[@]}"); then
+        if ! (_is_in_list "$COMMAND" "${DOCKER_TOOLING_ACCEPTED_COMMANDS[@]}"); then
 
-            echo "please enter one of: [${ACCEPTED_COMMANDS[*]}]"
+            echo "please enter one of: [${DOCKER_TOOLING_ACCEPTED_COMMANDS[*]}]"
 
             exit 1
 

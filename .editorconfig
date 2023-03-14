@@ -1,0 +1,17 @@
+# https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file and spaces not tabs
+[*]
+indent_style = space
+end_of_line = lf
+insert_final_newline = true
+
+[*.sh]
+indent_size = 4
+
+# Ignore all the shellspec test files when using shfmt
+[**/*_spec.sh]
+ignore = true

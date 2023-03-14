@@ -6,15 +6,12 @@
 #
 ##
 
+source ./tools/docker_cli/_config.sh
+source ./tools/common/_helpers.sh
+
 _tools_docker_cli_module() {
 
     export TOOLS_DOCKER_CLI_EXPORTED=true
-
-    ###
-
-    source ./tools/common/_config.sh
-
-    source ./tools/common/_helpers.sh
 
     ###
 
@@ -62,13 +59,9 @@ _tools_docker_cli_module() {
 
     steam_aws_docker_cli_main() {
 
-        local -r DOCKER_CLI_ACCEPTED_ACTIONS=("$BUILD" "$RUN")
-
-        ###
-
         if [ -z ${1+x} ]; then
 
-            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_ACTIONS[*]}]"
+            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_COMMANDS[*]}]"
 
             exit 1
 
@@ -78,9 +71,9 @@ _tools_docker_cli_module() {
 
         ###
 
-        if ! (_is_in_list "$STEAM_AWS_CLI_BUILD_SCRIPT_ACTION" "${DOCKER_CLI_ACCEPTED_ACTIONS[@]}"); then
+        if ! (_is_in_list "$STEAM_AWS_CLI_BUILD_SCRIPT_ACTION" "${DOCKER_CLI_ACCEPTED_COMMANDS[@]}"); then
 
-            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_ACTIONS[*]}]"
+            echo "please enter one of: [${DOCKER_CLI_ACCEPTED_COMMANDS[*]}]"
 
             exit 1
 

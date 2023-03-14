@@ -12,12 +12,15 @@ jobs:
       - name: Build image
         run: ./_docker_tooling.sh build
         shell: bash
-      - name: Create a temp secrets.sh for the linter
+      - name: Run formatter (shfmt)
+        run: ./_docker_tooling.sh run fmt
+        shell: bash
+      - name: Create a temp secrets.sh
         run: cp ./cli/config/example.secrets.sh ./cli/config/secrets.sh
+        shell: bash
+      - name: Run tests and also confirm coverage limits are reached (shellspec)
+        run: ./_docker_tooling.sh run test:ci
         shell: bash
       - name: Run linter (shellcheck)
         run: ./_docker_tooling.sh run lint
-        shell: bash
-      - name: Run formatter (shfmt)
-        run: ./_docker_tooling.sh run fmt
         shell: bash
