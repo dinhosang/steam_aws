@@ -8,7 +8,7 @@ _helpers_print_help_module() {
 
     _print_text() {
 
-        echo "$1"
+        echo -e "$1"
     }
 
     ###
@@ -22,27 +22,27 @@ _helpers_print_help_module() {
 
         -----
 
-            ./cli.sh help
+            ${ANSI_GREEN}./docker_cli.sh run help${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh help${ANSI_CLEAR}
                     
                 displays this text
 
-            ./cli.sh ami <sub_command> [flags]
+            ${ANSI_GREEN}./docker_cli.sh run ami${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to create / update / delete / prune AMIs
                 
-                use './cli.sh ami help' for details
+                use ${ANSI_GREY}'./docker_cli.sh run ami help${ANSI_CLEAR}' OR ${ANSI_GREY}'./cli.sh ami help${ANSI_CLEAR}' for details
 
-            ./cli.sh instance <sub_command> [flags]
+            ${ANSI_GREEN}./docker_cli.sh run instance${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh instance${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to create / delete / prune ec2 instances
                 
-                use './cli.sh instance help' for details
+                use ${ANSI_GREY}'./docker_cli.sh run instance help${ANSI_CLEAR}' OR ${ANSI_GREY}'./cli.sh instance help${ANSI_CLEAR}' for details
             
-            ./cli.sh snapshot <sub_command> [flags]
+            ${ANSI_GREEN}./docker_cli.sh run snapshot${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh snapshot${ANSI_CLEAR} ${ANSI_YELLOW}<sub_command>${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to prune / delete volume snapshots
                 
-                use './cli.sh snapshot help' for details
+                use ${ANSI_GREY}'./docker_cli.sh run snapshot help${ANSI_CLEAR}' OR ${ANSI_GREY}'./cli.sh snapshot help${ANSI_CLEAR}' for details
 
         -----
         "
@@ -59,11 +59,11 @@ _helpers_print_help_module() {
         
         -----
 
-            ./cli.sh ami help
+            ${ANSI_GREEN}./docker_cli.sh run ami help${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami help${ANSI_CLEAR}
                     
                 displays this text
 
-            ./cli.sh ami create [flags]
+            ${ANSI_GREEN}./docker_cli.sh run ami create${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami create${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to create a fresh ami via packer
 
@@ -78,15 +78,15 @@ _helpers_print_help_module() {
                     Not an issue if you never intend to delete the amis, or intend to delete everything
                     after testing the cli out.
 
-            ./cli.sh ami update [flags]
+            ${ANSI_GREEN}./docker_cli.sh run ami update${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami update${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to create a new ami based off of the most recently created running instance
 
-            ./cli.sh ami delete [flags]
+            ${ANSI_GREEN}./docker_cli.sh run ami delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to delete the most recently created ami
 
-            ./cli.sh ami prune [flags]
+            ${ANSI_GREEN}./docker_cli.sh run ami prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh ami prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to delete all but the most recently created ami, useful after using 'ami update'
 
@@ -105,7 +105,25 @@ _helpers_print_help_module() {
                 for _AWS_PROFILE key
 
                 
-                    example: './cli.sh ami create -p=zelda'
+                    examples: 
+
+                        '${ANSI_GREEN}./docker_cli.sh run ami create -p=zelda${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh ami create -p=zelda${ANSI_CLEAR}'
+
+            -r=<aws_region>
+
+                the name of the region to use when connecting to aws.
+
+                If not passed in it will default to value set in ./cli/config/secrets.sh
+                for _AWS_REGION key
+
+
+                    example:
+
+                        '${ANSI_GREEN}./docker_cli.sh run ami create -r=us-east-1${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh ami create -r=us-east-1${ANSI_CLEAR}'
 
         -----
         "
@@ -122,20 +140,20 @@ _helpers_print_help_module() {
         
         -----
 
-            ./cli.sh instance help
+            ${ANSI_GREEN}./docker_cli.sh instance help${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh instance help${ANSI_CLEAR}
                     
                 displays this text
 
-            ./cli.sh instance create [flags]
+            ${ANSI_GREEN}./docker_cli.sh instance create${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh instance create${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to create instance
 
-            ./cli.sh instance delete [flags]
+            ${ANSI_GREEN}./docker_cli.sh run instance delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh instance delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to delete most recently launched instance
             
-            ./cli.sh instance prune [flags]
-                
+            ${ANSI_GREEN}./docker_cli.sh run instance prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh instance prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
+
                 to delete all but the most recently launched instance
 
                 NOTE:
@@ -161,7 +179,25 @@ _helpers_print_help_module() {
                 for _AWS_PROFILE key
 
                 
-                    example: './cli.sh instance create -p=zelda'
+                    example:
+
+                        '${ANSI_GREEN}./docker_cli.sh run instance create -p=zelda${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh instance create -p=zelda${ANSI_CLEAR}'
+
+            -r=<aws_region>
+
+                the name of the region to use when connecting to aws.
+
+                If not passed in it will default to value set in ./cli/config/secrets.sh
+                for _AWS_REGION key
+
+
+                    example:
+
+                        '${ANSI_GREEN}./docker_cli.sh run instance create -r=us-east-1${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh instance create -r=us-east-1${ANSI_CLEAR}'
 
         -----
         "
@@ -178,11 +214,11 @@ _helpers_print_help_module() {
         
         -----
 
-            ./cli.sh snapshot help
+            ${ANSI_GREEN}./docker_cli.sh run snapshot help${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh snapshot help${ANSI_CLEAR}
                     
                 displays this text
 
-            ./cli.sh snapshot delete [flags]
+            ${ANSI_GREEN}./docker_cli.sh run snapshot delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh snapshot delete${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to delete most recently created volume snapshot
 
@@ -190,7 +226,7 @@ _helpers_print_help_module() {
 
                     requires the relevant ami to be deleted first
             
-            ./cli.sh snapshot prune [flags]
+            ${ANSI_GREEN}./docker_cli.sh run snapshot prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR} OR ${ANSI_CYAN}./cli.sh snapshot prune${ANSI_CLEAR} ${ANSI_GREY}[flags]${ANSI_CLEAR}
                 
                 to delete all but the most recently created volume snapshot
 
@@ -213,7 +249,27 @@ _helpers_print_help_module() {
                 for _AWS_PROFILE key
 
                 
-                    example: './cli.sh snapshot prune -p=zelda'
+                    example:
+
+                        '${ANSI_GREEN}./docker_cli.sh run snapshot prune -p=zelda${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh snapshot prune -p=zelda${ANSI_CLEAR}'
+
+
+            -r=<aws_region>
+
+                the name of the region to use when connecting to aws.
+
+                If not passed in it will default to value set in ./cli/config/secrets.sh
+                for _AWS_REGION key
+
+
+                    example:
+
+                        '${ANSI_GREEN}./docker_cli.sh run instance create -r=us-east-1${ANSI_CLEAR}'
+
+                        '${ANSI_CYAN}./cli.sh instance create -r=us-east-1${ANSI_CLEAR}'
+
 
         -----
         "

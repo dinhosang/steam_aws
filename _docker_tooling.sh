@@ -21,10 +21,25 @@ source ./tools/docker_tooling/index.sh
 #
 #   ./docker_tooling.sh run <sub_command>
 #
-#       -   will run one of either: linting, formatting, formatting-auto-fix
+#       -   will run one of either:
 #
+#               test, test with coverage, test for ci, linting, formatting, formatting with auto-fix
+#
+#           -   see below for further details
 #
 ##
+#
+#   ./docker_tooling.sh run test
+#
+#       -   will run the unit tests via shellspec with coverage
+#
+#   ./docker_tooling.sh run test:nocov
+#
+#       -   will run the unit tests via shellspec without coverage (much faster than with)
+#
+#   ./docker_tooling.sh run test:ci
+#
+#       -   will run the unit tests via shellspec as root to allow for coverage checks in ci
 #
 #   ./docker_tooling.sh run lint
 #

@@ -18,7 +18,7 @@ source ./tools/docker_cli/index.sh
 #
 #       -   will build the runner image
 #
-#  ./docker_cli.sh run
+#   ./docker_cli.sh run
 #
 #       -   will display the cli help text, the commands, sub-commands, flags can also be passed in
 #           -   exmaple: './docker_cli.sh run ami create' will start the ami create process
