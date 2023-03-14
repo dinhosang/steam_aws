@@ -1,3 +1,9 @@
+## 0.7.1 (2023-03-14)
+
+### Refactor
+
+- **all**: added stricter shell
+
 ## 0.7.0 (2023-03-14)
 
 ### Feat
