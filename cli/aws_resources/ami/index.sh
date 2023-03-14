@@ -24,13 +24,16 @@ _create_ami_via_packer() {
         -var "region=$AWS_REGION" \
         -var "profile=$AWS_PROFILE" \
         -var "ami_name=$AMI_NAME" \
-        -var "purpose=$AMI_TAG_PURPOSE" \
+        -var "purpose=$AMI_SNAPSHOT_TAG_PURPOSE" \
         -var "root_volume_name=$ROOT_VOLUME_NAME" \
         -var "os_version=$OS_VERSION" \
         -var "instance_type=$INSTANCE_TYPE" \
         -var "os_source_ami_name=$OS_SOURCE_AMI_NAME" \
         -var "instance_login_user_name=$INSTANCE_LOGIN_USER_NAME" \
         -var "instance_login_user_password=$INSTANCE_LOGIN_USER_PASSWORD" \
+        -var "startup_dir=$STARTUP_DIR" \
+        -var "startup_control_script_path=$STARTUP_SCRIPT_CONTROL_PATH" \
+        -var "startup_completed_script_path=$STARTUP_COMPLETED_SCRIPT_PATH" \
         ./packer/steam-play-instance.pkr.hcl 
 
     echo "FINISH: create AMI via packer"
@@ -125,7 +128,7 @@ _create_ami_via_aws_cli_and_instance_id() {
         --region $AWS_REGION \
         --instance-id $INSTANCE_ID \
         --name "${AMI_NAME}_$(get_timestamp)" \
-        --tag-specifications "ResourceType=image,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$AMI_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]" "ResourceType=snapshot,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$INSTANCE_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]"
+        --tag-specifications "ResourceType=image,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$AMI_SNAPSHOT_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]" "ResourceType=snapshot,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$AMI_SNAPSHOT_TAG_PURPOSE},{Key=$TAG_KEY_OS_VERSION,Value=$OS_VERSION}]"
     )
 
 

@@ -4,3 +4,11 @@
 
 
 cli/config/secrets.sh
+
+
+##
+#   TMP FILES
+##
+
+
+cli/aws_resources/ec2/user_data.txt.copy

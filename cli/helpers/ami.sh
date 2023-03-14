@@ -58,7 +58,7 @@ _get_active_ami_ids() {
     local ami_ids_array=$(aws --profile $AWS_PROFILE ec2 describe-images \
         --region $AWS_REGION \
         --owners self \
-        --filters "Name=tag:$TAG_KEY_PURPOSE, Values=$AMI_TAG_PURPOSE" \
+        --filters "Name=tag:$TAG_KEY_PURPOSE, Values=$AMI_SNAPSHOT_TAG_PURPOSE" \
         --query "reverse(sort_by(Images,&CreationDate))[$query_instance_array_indexes].[ImageId][]"
     )
 

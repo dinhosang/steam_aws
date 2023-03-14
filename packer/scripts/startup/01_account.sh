@@ -2,42 +2,77 @@
 
 
 ##
-#   START
+#   PURPOSE:
+#       -   user account (like 'ubuntu') does not start with login password
+#       -   creating a password during packer build doesn't seem to take
+#       -   this creates a startup script to run when instance is launched
+#       -   NOTE: it takes a little while for this script to run so you may not be able to RDP in immediately
+#
 ##
 
 
-echo "START: create startup script to set password for RDP login account"
+create_startup_account() {
+
+    local file_name=01_account.sh
+
+    local script_file_path=$STARTUP_DIR/${file_name}
+ 
+    
+    ###
 
 
-##
-#  Create file
-##
+    echo "STEP: creating startup script - '${file_name}'"
+
+    touch $script_file_path
 
 
-_file_name=/01_account.sh
-
-touch $_file_name
+    ###
 
 
-##
-#   ENTER CONTENTS FOR STARTUP FILE
-##
+    echo "STEP: writing contents of startup script"
+
+    echo -e '#!/bin/bash\n\n' >> $script_file_path
+
+    echo -e "INSTANCE_LOGIN_USER_NAME=${INSTANCE_LOGIN_USER_NAME}\n" >> $script_file_path
+
+    echo -e "INSTANCE_LOGIN_USER_PASSWORD=${INSTANCE_LOGIN_USER_PASSWORD}\n" >> $script_file_path
+
+    echo 'echo -en "${INSTANCE_LOGIN_USER_PASSWORD}\n${INSTANCE_LOGIN_USER_PASSWORD}\n" | sudo passwd ${INSTANCE_LOGIN_USER_NAME}' >> $script_file_path
+
+    echo -e '\n' >> $script_file_path
+
+    
+    ###
 
 
-echo '#!/bin/bash' >> $_file_name
+    echo "STEP: updating controller script to run '${file_name}'"
 
-echo "INSTANCE_LOGIN_USER_NAME=$INSTANCE_LOGIN_USER_NAME" >> $_file_name
+    echo "echo -e 'START: ${file_name}\n' >> ${STARTUP_COMPLETED_SCRIPT_PATH}" >> $STARTUP_SCRIPT_CONTROL_PATH
 
-echo "INSTANCE_LOGIN_USER_PASSWORD=$INSTANCE_LOGIN_USER_PASSWORD" >> $_file_name
+    echo -e "${script_file_path} >> ${STARTUP_COMPLETED_SCRIPT_PATH} 2>&1\n" >> $STARTUP_SCRIPT_CONTROL_PATH
 
-echo 'echo -en "${INSTANCE_LOGIN_USER_PASSWORD}\n${INSTANCE_LOGIN_USER_PASSWORD}\n" | sudo passwd ${INSTANCE_LOGIN_USER_NAME}' >> $_file_name
+    echo "echo -e '\nFINISH: ${file_name}\n\n' >> ${STARTUP_COMPLETED_SCRIPT_PATH}" >> $STARTUP_SCRIPT_CONTROL_PATH
 
-chmod +x $_file_name
-
-
-##
-#   FINISH
-##
+    echo -e '\n\n' >> $STARTUP_SCRIPT_CONTROL_PATH
 
 
-echo "FINISH: create startup script to set password for RDP login account"
+    ###
+    
+
+    echo "STEP: make '${file_name}' executable"
+
+    chmod +x $script_file_path
+
+}
+
+
+###
+
+
+echo "START: creating startup script to set password for RDP login account"
+
+
+create_startup_account
+
+
+echo "FINISH: creating startup script to set password for RDP login account"

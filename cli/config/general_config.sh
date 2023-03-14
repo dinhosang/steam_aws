@@ -15,7 +15,7 @@
 
 
 AMI_NAME='steam_play_instance'
-AMI_TAG_PURPOSE='steam_play_instance'
+AMI_SNAPSHOT_TAG_PURPOSE='steam_play_instance'
 
 
 ##
@@ -43,3 +43,13 @@ SG_NAME_PREFIX_RDP='rdp'
 
 INSTANCE_PROFILE_NAME='steam_server'
 INSTANCE_TAG_PURPOSE='steam_server'
+
+
+##
+#   STARTUP SCRIPTS
+##
+
+
+STARTUP_DIR=/startup
+STARTUP_SCRIPT_CONTROL_PATH=/startup/00_startup.sh
+STARTUP_COMPLETED_SCRIPT_PATH=/startup/startup_completed.txt

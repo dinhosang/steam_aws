@@ -49,7 +49,7 @@ _get_volume_snapshot_ids() {
 
     local snapshot_ids_json_array=$(aws --profile $AWS_PROFILE ec2 describe-snapshots \
         --region $AWS_REGION \
-        --filters Name=tag:$TAG_KEY_PURPOSE,Values=$AMI_TAG_PURPOSE  \
+        --filters Name=tag:$TAG_KEY_PURPOSE,Values=$AMI_SNAPSHOT_TAG_PURPOSE  \
         --query "reverse(sort_by(Snapshots,&StartTime))[$query_instance_array_indexes].[SnapshotId][]"
     )
 

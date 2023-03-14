@@ -41,13 +41,26 @@ _create_ec2(){
 
     local latest_ami_id=$(_get_active_ami_ids true)
 
-    echo "STEP: using ami - '$latest_ami_id'"
+    echo "INFO: using ami - '$latest_ami_id'"
 
 
-    ##
-    #   RUN INSTANCE
-    ##
+    ###
 
+
+    echo 'STEP: setting up user data'
+
+    local user_data_file_path="cli/aws_resources/ec2/user_data.txt"
+    local user_data_file_path_copy="${user_data_file_path}.copy"
+
+    cp $user_data_file_path $user_data_file_path_copy
+
+    sed -i '' "s|{{STARTUP_SCRIPT_CONTROL_PATH}}|${STARTUP_SCRIPT_CONTROL_PATH}|" $user_data_file_path_copy
+
+
+    ###
+
+
+    echo "STEP: launching instance"
 
     local created_instance_details=$(aws --profile $AWS_PROFILE ec2 run-instances \
         --region $AWS_REGION \
@@ -56,13 +69,23 @@ _create_ec2(){
         --security-groups $SG_NAME_RDP $SG_NAME_AWS_CONN \
         --iam-instance-profile Name=$INSTANCE_PROFILE_NAME \
         --block-device-mappings "DeviceName=$ROOT_VOLUME_NAME,Ebs={VolumeSize=$ROOT_VOLUME_SIZE}" \
-        --user-data $'#!/bin/bash\n/01_account.sh' \
+        --user-data file://${user_data_file_path_copy} \
         --tag-specifications "ResourceType=instance,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$INSTANCE_TAG_PURPOSE}]" \
             "ResourceType=volume,Tags=[{Key=$TAG_KEY_PURPOSE,Value=$INSTANCE_TAG_PURPOSE}]"
     )
 
-
     local created_instance_id=$(echo $created_instance_details | jq -r '.Instances[0].InstanceId')
+
+    echo "INFO: instance id - '$created_instance_id'"
+
+
+    ###
+
+
+    echo 'STEP: cleanup user data'
+
+    rm $user_data_file_path_copy
+
 
     ##
     #   INSTANCE - WAIT FOR RUNNING
