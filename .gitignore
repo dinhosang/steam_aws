@@ -1,4 +1,12 @@
 ##
+#   OS
+##
+
+
+.DS_Store
+
+
+##
 #   SECRETS
 ## 
 
@@ -12,3 +20,14 @@ cli/config/secrets.sh
 
 
 cli/aws_resources/ec2/user_data.txt.copy
+
+
+##
+#   TEST
+##
+
+
+/.shellspec-local
+/.shellspec-quick.log
+/report/
+/coverage/
