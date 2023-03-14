@@ -1,3 +1,9 @@
+## 0.3.2 (2023-03-14)
+
+### Fix
+
+- small fixes to config and logging
+
 ## 0.3.1 (2023-03-14)
 
 ### Fix
