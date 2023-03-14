@@ -1,0 +1,5 @@
+[tool.commitizen]
+
+annotated_tag = true
+major_version_zero = true
+version = "0.0.1"
