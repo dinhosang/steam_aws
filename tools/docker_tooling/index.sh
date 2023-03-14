@@ -79,6 +79,7 @@ _tools_docker_tooling_module() {
     }
 
     run_test_ci_shellspec_tooling() {
+        # next project should figure out how to change user in a github action instead of doing this
         run_test_shellspec_tooling '-u=root'
     }
 
