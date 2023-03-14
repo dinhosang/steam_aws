@@ -74,7 +74,7 @@ _aws_resources_snapshot_helpers_module() {
 
 ###
 
-if [ -z $AWS_RESOURCES_SNAPSHOT_HELPERS_MODULE_IMPORTED ]; then
+if [[ ${AWS_RESOURCES_SNAPSHOT_HELPERS_MODULE_IMPORTED:=false} == false ]]; then
 
     _aws_resources_snapshot_helpers_module
 

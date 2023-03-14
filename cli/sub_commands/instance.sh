@@ -49,7 +49,7 @@ _subcommands_instance_module() {
 
         ###
 
-        if [ -z "${instance_ids[0]}" ]; then
+        if [ -z "${instance_ids[0]:-}" ]; then
 
             log_info "no additional instances found running - skipping deletion"
 
@@ -76,7 +76,7 @@ _subcommands_instance_module() {
 
         ###
 
-        if [ -z "${instance_id[0]}" ]; then
+        if [ -z "${instance_id[0]:-}" ]; then
 
             log_info "no instances found running - skipping deletion"
 
@@ -103,7 +103,7 @@ _subcommands_instance_module() {
 
 ###
 
-if [ -z $SUBCOMMANDS_INSTANCE_MODULE_IMPORTED ]; then
+if [[ ${SUBCOMMANDS_INSTANCE_MODULE_IMPORTED:=false} == false ]]; then
 
     _subcommands_instance_module
 

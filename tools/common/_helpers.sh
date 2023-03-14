@@ -23,7 +23,7 @@ _tools_helpers_module() {
 
 ###
 
-if [ -z $TOOLS_HELPERS_MODULE_EXPORTED ]; then
+if [[ ${TOOLS_HELPERS_MODULE_EXPORTED:=false} == false ]]; then
 
     _tools_helpers_module
 

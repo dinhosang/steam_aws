@@ -247,7 +247,7 @@ _helpers_print_help_module() {
 
 ###
 
-if [ -z $HELPERS_PRINT_HELP_MODULE_IMPORTED ]; then
+if [[ ${HELPERS_PRINT_HELP_MODULE_IMPORTED:=false} == false ]]; then
 
     _helpers_print_help_module
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 ##
 #   NOTE:
 #       -   all commands must be run at the root of steam_aws directory

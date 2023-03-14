@@ -1,13 +1,17 @@
 #!/bin/bash
 
+set -eu
+
+###
+
 source ./cli/index.sh
 
 ###
 
 main() {
 
-    local -r USER_COMMAND=$1
-    local -r USER_SUB_COMMAND=$2
+    local -r USER_COMMAND="${1-}"
+    local -r USER_SUB_COMMAND="${2-}"
 
     local USER_FLAGS
     read -r -a USER_FLAGS <<<"${@:3}"

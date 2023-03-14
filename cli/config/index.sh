@@ -13,7 +13,7 @@ _config_index_module() {
 
 ###
 
-if [ -z $CONFIG_INDEX_MODULE_IMPORTED ]; then
+if [[ ${CONFIG_INDEX_MODULE_IMPORTED:=false} == false ]]; then
 
     _config_index_module
 

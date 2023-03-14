@@ -25,7 +25,7 @@ _helpers_list_module() {
 
 ###
 
-if [ -z $HELPERS_LIST_MODULE_IMPORTED ]; then
+if [[ ${HELPERS_LIST_MODULE_IMPORTED:=false} == false ]]; then
 
     _helpers_list_module
 
