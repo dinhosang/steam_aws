@@ -6,6 +6,10 @@ This repo contains a cli for handling a very basic control of an ec2 instance on
 
 <br/>
 
+![example appearance of cli - specifically the base help command](docs/assets/images/help/base_help_command.png)
+
+<br/>
+
 ## *Contents*
 
 <br/>
